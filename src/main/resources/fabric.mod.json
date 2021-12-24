@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "betterblockoutline",
+  "version": "${version}",
+  "name": "BetterBlockOutline",
+  "description": "A more customizable block outline",
+  "authors": [
+    "DarkKronicle"
+  ],
+  "contact": {},
+  "license": "MPL-2.0",
+  "icon": "assets/betterblockoutline/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.darkkronicle.betterblockoutline.BetterBlockOutline"
+    ]
+  },
+  "mixins": [
+    "betterblockoutline.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.18"
+  }
+}
