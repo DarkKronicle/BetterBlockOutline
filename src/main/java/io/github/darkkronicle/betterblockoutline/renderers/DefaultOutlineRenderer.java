@@ -38,6 +38,7 @@ public class DefaultOutlineRenderer implements IOverlayRenderer {
         Vector3d camDif = RenderingUtil.getCameraOffset(camera, pos);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
+        RenderUtils.setupBlend();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         Color4f fillColor = ConfigStorage.General.FILL_COLOR.config.getColor();
@@ -56,11 +57,17 @@ public class DefaultOutlineRenderer implements IOverlayRenderer {
     private void drawBox(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
         RenderingUtil.setDepth(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue());
         RenderSystem.disableCull();
-        RenderUtils.setupBlend();
         MatrixStack.Entry entry = matrices.peek();
         RenderUtils.color(1, 1, 1, color.a);
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         outline.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            // Fix Z fighting
+            minX -= .001;
+            minY -= .001;
+            minZ -= .001;
+            maxX += .001;
+            maxY += .001;
+            maxZ += .001;
             RenderingUtil.drawBox(entry, buffer, camDif, (float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ, color);
         });
         tessellator.draw();
@@ -89,6 +96,13 @@ public class DefaultOutlineRenderer implements IOverlayRenderer {
 
         MatrixStack.Entry entry = matrices.peek();
         outline.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            // Fix Z fighting
+            minX -= .001;
+            minY -= .001;
+            minZ -= .001;
+            maxX += .001;
+            maxY += .001;
+            maxZ += .001;
             float xLength = (float) (maxX - minX);
             float yLength = (float) (maxY - minY);
             float zLength = (float) (maxZ - minZ);
