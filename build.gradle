@@ -1,9 +1,10 @@
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
+    id "io.freefair.lombok" version "6.0.0-m2"
 }
 
-version = project.mod_version
+version = "${project.mod_version}-${project.minecraft_version}"
 group = project.maven_group
 
 repositories {

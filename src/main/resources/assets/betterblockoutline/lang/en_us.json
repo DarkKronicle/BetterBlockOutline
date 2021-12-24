@@ -1,0 +1,18 @@
+{
+  "betterblockoutline.config.general.active": "Active",
+  "betterblockoutline.config.general.info.active": "Whether or not BetterBlockOutline §6replaces Minecraft's block outline\nIn other words, §6whether or not this mod is active",
+  "betterblockoutline.config.general.seethrough": "Show Through Blocks",
+  "betterblockoutline.config.general.info.seethrough": "Whether or not §6block occlusion for the block outline§r is ignored",
+  "betterblockoutline.config.general.outlinecolor": "Outline Color",
+  "betterblockoutline.config.general.info.outlinecolor": "The §6color§r of the block outline, in the form of #§7AA§cRR§aGG§9BB",
+  "betterblockoutline.config.general.fillcolor": "Fill Color",
+  "betterblockoutline.config.general.info.fillcolor": "The §6color§r of the block faces within the wireframe when a block is selected, in the form of #§7AA§cRR§aGG§9BB",
+  "betterblockoutline.config.general.outlinetype": "Outline Type",
+  "betterblockoutline.config.general.info.outlinetype": "The §6type of wireframe§r that is used when rendering the block outline\n§bLine §r- Renders §6only the edges§r, akin to Vanilla\n§dStrip - §r§6Connects the verticies§r of the block, looks cool",
+
+  "betterblockoutline.config.outlinetype.line": "§bLine",
+  "betterblockoutline.config.outlinetype.strip": "§dStrip",
+
+  "betterblockoutline.config.general.outlinewidth": "Width",
+  "betterblockoutline.config.general.info.outlinewidth": "How §6thick§r the §6block outline§r should be, in pixels"
+}

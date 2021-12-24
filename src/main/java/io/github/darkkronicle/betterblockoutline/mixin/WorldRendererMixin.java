@@ -1,6 +1,7 @@
 package io.github.darkkronicle.betterblockoutline.mixin;
 
 import io.github.darkkronicle.betterblockoutline.BlockOutlineManager;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
@@ -21,8 +22,10 @@ public class WorldRendererMixin {
             cancellable = true
     )
     private void drawBlockOutline(MatrixStack matrices, VertexConsumer vertexConsumer, Entity entity, double d, double e, double f, BlockPos pos, BlockState state, CallbackInfo ci) {
-        BlockOutlineManager.getInstance().drawOutline(matrices, vertexConsumer, entity, d, e, f, pos, state);
-        ci.cancel();
+        if (ConfigStorage.General.ACTIVE.config.getBooleanValue()) {
+            BlockOutlineManager.getInstance().drawOutline(matrices, vertexConsumer, entity, d, e, f, pos, state);
+            ci.cancel();
+        }
     }
 
 }
