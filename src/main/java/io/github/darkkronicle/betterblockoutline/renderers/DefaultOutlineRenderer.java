@@ -56,6 +56,7 @@ public class DefaultOutlineRenderer implements IOverlayRenderer {
     private void drawBox(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
         RenderingUtil.setDepth(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue());
         RenderSystem.disableCull();
+        RenderUtils.setupBlend();
         MatrixStack.Entry entry = matrices.peek();
         RenderUtils.color(1, 1, 1, color.a);
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -69,37 +70,45 @@ public class DefaultOutlineRenderer implements IOverlayRenderer {
     }
 
     private void drawLine(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
-        RenderingUtil.setupRenderSystem(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue());
+        RenderingUtil.setDepth(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue());
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        RenderSystem.disableCull();
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.lineWidth((float) ConfigStorage.General.OUTLINE_WIDTH.config.getDoubleValue());
-        RenderUtils.color(1, 1, 1, color.a);
 
         OutlineType type = (OutlineType) ConfigStorage.General.OUTLINE_TYPE.config.getOptionListValue();
         if (type == OutlineType.LINE) {
-            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
         } else if (type == OutlineType.STRIP) {
-            buffer.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            // Doesn't work atm
+            buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.LINES);
         } else {
             // Redundancy sake
-            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
         }
-
 
         MatrixStack.Entry entry = matrices.peek();
         outline.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            float xLength = (float) (maxX - minX);
+            float yLength = (float) (maxY - minY);
+            float zLength = (float) (maxZ - minZ);
+            float distance = (float) Math.sqrt(xLength * xLength + yLength * yLength + zLength * zLength);
+            xLength /= distance;
+            yLength /= distance;
+            zLength /= distance;
             Vector3f min = new Vector3f(minX + camDif.x, minY + camDif.y, minZ + camDif.z);
             Vector3f max = new Vector3f(maxX + camDif.x, maxY + camDif.y, maxZ + camDif.z);
 
             buffer.vertex(
                     entry.getPositionMatrix(), min.x, min.y, min.z
-            ).color(color.r, color.g, color.b, color.a).next();
+            ).color(color.r, color.g, color.b, color.a).normal(entry.getNormalMatrix(), xLength, yLength, zLength).next();
 
             buffer.vertex(
                     entry.getPositionMatrix(), max.x, max.y, max.z
-            ).color(color.r, color.g, color.b, color.a).next();
+            ).color(color.r, color.g, color.b, color.a).normal(entry.getNormalMatrix(), xLength, yLength, zLength).next();
         });
         tessellator.draw();
         RenderingUtil.revertRenderSystem();
-        RenderUtils.color(1, 1 ,1, 1);
     }
 
 }

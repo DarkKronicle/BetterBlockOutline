@@ -72,11 +72,9 @@ public class RenderingUtil {
 
     public void setupRenderSystem(boolean depth) {
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        RenderSystem.disableBlend();
         setDepth(depth);
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         RenderSystem.disableCull();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
     }
 
     public void revertRenderSystem() {
