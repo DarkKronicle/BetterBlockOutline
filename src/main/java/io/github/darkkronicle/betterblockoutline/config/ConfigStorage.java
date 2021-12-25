@@ -47,7 +47,7 @@ public class ConfigStorage implements IConfigHandler {
                 new ConfigOptionList(translate("outlinetype"), OutlineType.LINE, translate("info.outlinetype")));
 
         public final static SaveableConfig<ConfigDouble> OUTLINE_WIDTH = SaveableConfig.fromConfig("outlineWidth",
-                new ConfigDouble(translate("outlinewidth"), 1, 0.1, 3, translate("info.outlinewidth")));
+                new ConfigDouble(translate("outlinewidth"), 1, 0.1, 30, translate("info.outlinewidth")));
 
         public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH);
 
