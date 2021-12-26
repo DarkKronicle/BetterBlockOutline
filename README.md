@@ -4,6 +4,8 @@ BetterBlockOutline is a mod designed to overhaul the block outline from Vanilla 
 
 [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib) is required run and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for configuration.
 
+Join the [Discord](https://discord.gg/WnaE3uZxDA) for help.
+
 ## Screenshots
 
 Default ![Default](screenshots/pov_default.png)
