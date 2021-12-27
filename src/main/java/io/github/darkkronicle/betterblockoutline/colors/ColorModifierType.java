@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public enum ColorModifierType implements IConfigOptionListEntry {
     CHROMA("chroma", ChromaColorModifier::new),
-
+    BLINK("blink", BlinkColorModifier::new)
     ;
 
     private final String value;
@@ -28,7 +28,7 @@ public enum ColorModifierType implements IConfigOptionListEntry {
 
     @Override
     public String getDisplayName() {
-        return StringUtils.translate("betterblockoutline.colromodifiertype." + value);
+        return StringUtils.translate("betterblockoutline.colormodifiertype." + value);
     }
 
     @Override

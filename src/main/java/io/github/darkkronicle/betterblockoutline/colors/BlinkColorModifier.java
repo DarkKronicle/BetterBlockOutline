@@ -10,30 +10,30 @@ import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class ChromaColorModifier implements IColorModifier {
+public class BlinkColorModifier implements IColorModifier {
 
     private static String translate(String string) {
-        return "betterblockoutline.config.chroma." + string;
+        return "betterblockoutline.config.blink." + string;
     }
 
     private final SaveableConfig<ConfigDouble> duration = SaveableConfig.fromConfig("duration",
-            new ConfigDouble(translate("duration"), 10, 0.01, 30, translate("info.duration")));
+            new ConfigDouble(translate("duration"), 5, 0.5, 30, translate("info.duration")));
 
     private final SaveableConfig<ConfigDouble> offset = SaveableConfig.fromConfig("offset",
-            new ConfigDouble(translate("offset"), 0, 0, 1, translate("info.offset")));
+            new ConfigDouble(translate("offset"), 0, 0, 1, translate("info.duration")));
+
 
     @Override
     public Color4f getColor(Color4f original, long ms) {
         double loopTime = duration.config.getDoubleValue() * 1000;
         double percent = ((ms % loopTime) / loopTime + offset.config.getDoubleValue()) % 1;
-        Color4f rgb = ColorUtil.getRainbow(percent);
-        return new Color4f(rgb.r, rgb.g, rgb.b, original.a);
+        float alpha = ColorUtil.getBlink(percent, original.a);
+        return new Color4f(original.r, original.g, original.b, alpha);
     }
 
     @Override
     public Integer getOrder() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -43,5 +43,4 @@ public class ChromaColorModifier implements IColorModifier {
         configs.add(offset);
         return configs;
     }
-
 }

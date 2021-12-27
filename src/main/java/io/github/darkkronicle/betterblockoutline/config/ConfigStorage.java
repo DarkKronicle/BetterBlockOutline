@@ -17,6 +17,8 @@ import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class ConfigStorage implements IConfigHandler {
     public static final String CONFIG_FILE_NAME = BetterBlockOutline.MOD_ID + ".json";
     public static final int CONFIG_VERSION = 1;
 
-    public static final Map<String, TreeSet<ConfigColorModifier>> COLOR_MODS = new HashMap<>();
+    public static final Map<String, List<ConfigColorModifier>> COLOR_MODS = new HashMap<>();
 
     public static class General {
 
@@ -55,7 +57,10 @@ public class ConfigStorage implements IConfigHandler {
         public final static SaveableConfig<ConfigDouble> OUTLINE_WIDTH = SaveableConfig.fromConfig("outlineWidth",
                 new ConfigDouble(translate("outlinewidth"), 1, 0.1, 30, translate("info.outlinewidth")));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH);
+        public final static SaveableConfig<ConfigBoolean> CUBE_OUTLINE = SaveableConfig.fromConfig("cubeOutline",
+                new ConfigBoolean(translate("cubeoutline"), false, translate("info.cubeoutline")));
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE);
 
     }
 
@@ -80,6 +85,7 @@ public class ConfigStorage implements IConfigHandler {
 
                 readOptions(root, General.NAME, General.OPTIONS);
 
+                COLOR_MODS.clear();
                 JsonElement colorModsEl = root.get("color_modifiers");
                 if (colorModsEl != null && colorModsEl.isJsonObject()) {
                     JsonObject colorMods = colorModsEl.getAsJsonObject();
@@ -87,7 +93,6 @@ public class ConfigStorage implements IConfigHandler {
                         if (!value.getValue().isJsonArray()) {
                             continue;
                         }
-                        TreeSet<ConfigColorModifier> config = getColorMods(value.getKey());
                         for (JsonElement el : value.getValue().getAsJsonArray()) {
                             if (!el.isJsonObject()) {
                                 continue;
@@ -99,7 +104,7 @@ public class ConfigStorage implements IConfigHandler {
                             ColorModifierType type = ColorModifierType.CHROMA.fromString(obj.get("type").getAsString());
                             ConfigColorModifier mod = new ConfigColorModifier(type);
                             mod.load(el);
-                            config.add(mod);
+                            addColorMod(value.getKey(), mod);
                         }
                     }
                 }
@@ -120,7 +125,7 @@ public class ConfigStorage implements IConfigHandler {
 
             JsonObject colorMods = new JsonObject();
 
-            for (Map.Entry<String, TreeSet<ConfigColorModifier>> mods : COLOR_MODS.entrySet()) {
+            for (Map.Entry<String, List<ConfigColorModifier>> mods : COLOR_MODS.entrySet()) {
                 JsonArray modParent = new JsonArray();
                 for (ConfigColorModifier mod : mods.getValue()) {
                     JsonObject modValue = mod.save();
@@ -159,12 +164,18 @@ public class ConfigStorage implements IConfigHandler {
         }
     }
 
-    public static TreeSet<ConfigColorModifier> getColorMods(String key) {
-        TreeSet<ConfigColorModifier> mods = COLOR_MODS.get(key);
+    public static void addColorMod(String key, ConfigColorModifier modifier) {
+        List<ConfigColorModifier> mods = getColorMods(key);
+        mods.add(modifier);
+        Collections.sort(mods);
+    }
+
+    public static List<ConfigColorModifier> getColorMods(String key) {
+        List<ConfigColorModifier> mods = COLOR_MODS.get(key);
         if (mods != null) {
             return mods;
         }
-        COLOR_MODS.put(key, new TreeSet<>());
+        COLOR_MODS.put(key, new ArrayList<>());
         return getColorMods(key);
     }
 

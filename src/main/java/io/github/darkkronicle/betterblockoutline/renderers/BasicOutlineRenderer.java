@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.betterblockoutline.util.Vector3f;
+import net.minecraft.util.shape.VoxelShapes;
 import org.lwjgl.opengl.GL11;
 
 public class BasicOutlineRenderer implements IOverlayRenderer {
@@ -36,7 +37,12 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
 
     @Override
     public void render(MatrixStack matrices, Vector3d camera, Entity entity, BlockPos pos, BlockState blockState) {
-        VoxelShape outline = blockState.getOutlineShape(client.world, pos, ShapeContext.of(entity));
+        VoxelShape outline;
+        if (ConfigStorage.General.CUBE_OUTLINE.config.getBooleanValue()) {
+            outline = VoxelShapes.fullCube();
+        } else {
+            outline = blockState.getOutlineShape(client.world, pos, ShapeContext.of(entity));
+        }
         Vector3d camDif = RenderingUtil.getCameraOffset(camera, pos);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();

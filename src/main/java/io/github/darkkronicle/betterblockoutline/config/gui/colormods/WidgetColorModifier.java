@@ -4,11 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
+import fi.dy.masa.malilib.gui.button.ButtonOnOff;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.gui.ColorModifierEditor;
 import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,9 +34,15 @@ public class WidgetColorModifier extends WidgetListEntryBase<ConfigColorModifier
         this.configColorModifier = entry;
         this.parent = parent;
 
+        y += 1;
+
         int pos = x + width - 2;
 
+        pos -= addOnOffButton(pos, y, ButtonListener.Type.ACTIVE, entry.getActive().config.getBooleanValue());
         pos -= addButton(pos, y, ButtonListener.Type.CONFIGURE, null);
+        pos -= addButton(pos, y, ButtonListener.Type.REMOVE, (button) -> {
+            ConfigStorage.getColorMods(parent.getType().getConfigKey()).remove(configColorModifier);
+        });
 
         buttonStartX = pos;
 
@@ -59,6 +67,13 @@ public class WidgetColorModifier extends WidgetListEntryBase<ConfigColorModifier
         RenderSystem.disableBlend();
         super.render(mouseX, mouseY, selected, matrices);
         RenderUtils.disableDiffuseLighting();
+    }
+
+    private int addOnOffButton(int xRight, int y, ButtonListener.Type type, boolean isCurrentlyOn) {
+        ButtonOnOff button = new ButtonOnOff(xRight, y, -1, true, type.translate, isCurrentlyOn);
+        this.addButton(button, new ButtonListener(type, this, null));
+
+        return button.getWidth() + 1;
     }
 
     @Override
@@ -87,9 +102,6 @@ public class WidgetColorModifier extends WidgetListEntryBase<ConfigColorModifier
         private final WidgetColorModifier parent;
         private final Consumer<ConfigColorModifier> remove;
 
-        public ButtonListener(Type type, WidgetColorModifier parent) {
-            this(type, parent, null);
-        }
 
         public ButtonListener(Type type, WidgetColorModifier parent, Consumer<ConfigColorModifier> remove) {
             this.parent = parent;
@@ -108,7 +120,7 @@ public class WidgetColorModifier extends WidgetListEntryBase<ConfigColorModifier
                 this.parent.entry.getActive().config.setBooleanValue(!this.parent.entry.getActive().config.getBooleanValue());
                 parent.parent.refreshEntries();
             } else if (type == Type.CONFIGURE) {
-                GuiBase.openGui(new ColorModifierEditor(parent.entry, parent.parent));
+                GuiBase.openGui(new ColorModifierEditor(parent.configColorModifier, parent.parent.getParentScreen()));
             }
         }
 
@@ -124,7 +136,7 @@ public class WidgetColorModifier extends WidgetListEntryBase<ConfigColorModifier
             }
 
             private static String translate(String key) {
-                return "betterblockoutline.config." + key;
+                return "betterblockoutline.config.button." + key;
             }
 
             public String getDisplayName() {

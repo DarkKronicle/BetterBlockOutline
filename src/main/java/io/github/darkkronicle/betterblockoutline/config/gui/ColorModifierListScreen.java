@@ -33,11 +33,11 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
 
     public ColorModifierListScreen(Type type) {
         super(10, 60);
-        this.title = "betterblockoutline.screen.main";
+        this.title = StringUtils.translate("betterblockoutline.screen.main");
         this.type = type;
 
         this.typeDropDown = new WidgetDropDownList<>(0, 0, 160, 18, 200, 10, ImmutableList.copyOf(ColorModifierType.values()), ColorModifierType::getDisplayName);
-        this.typeDropDown.setZLevel(this.getZOffset() + 100);
+        this.typeDropDown.setZLevel(this.getZOffset() - 100);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
                 InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "betterblockoutline.error.noselectedmodifier");
                 return;
             }
-            ConfigStorage.getColorMods(type.getConfigKey()).add(new ConfigColorModifier(typeDropDown.getSelectedEntry()));
+            ConfigStorage.addColorMod(type.getConfigKey(), new ConfigColorModifier(typeDropDown.getSelectedEntry()));
             getListWidget().refreshEntries();
         });
 
@@ -74,7 +74,7 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
 
     @Override
     protected WidgetListColorModifiers createListWidget(int listX, int listY) {
-        return new WidgetListColorModifiers(listX, listY, getBrowserWidth(), getBrowserHeight(), null, type);
+        return new WidgetListColorModifiers(listX, listY, getBrowserWidth(), getBrowserHeight(), null, type, this);
     }
 
     @Override

@@ -1,4 +1,5 @@
 {
+  "betterblockoutline.screen.main": "§eBetter§6Block§7Outline §rConfig",
   "betterblockoutline.config.general.active": "Active",
   "betterblockoutline.config.general.info.active": "Whether or not BetterBlockOutline §6replaces Minecraft's block outline\nIn other words, §6whether or not this mod is active",
   "betterblockoutline.config.general.seethrough": "Show Through Blocks",
@@ -9,10 +10,40 @@
   "betterblockoutline.config.general.info.fillcolor": "The §6color§r of the block faces within the wireframe when a block is selected, in the form of #§7AA§cRR§aGG§9BB",
   "betterblockoutline.config.general.outlinetype": "Outline Type",
   "betterblockoutline.config.general.info.outlinetype": "The §6type of wireframe§r that is used when rendering the block outline\n§bLine §r- Renders §6only the edges§r, akin to Vanilla\n§dStrip - §r§6Connects the verticies§r of the block, looks cool",
+  "betterblockoutline.config.general.cubeoutline": "Force Cube Outline",
+  "betterblockoutline.config.general.info.cubeoutline": "Forces the §6outline§r of the block to always be a cube the size of a block",
 
   "betterblockoutline.config.outlinetype.line": "§bLine",
   "betterblockoutline.config.outlinetype.strip": "§dStrip",
 
   "betterblockoutline.config.general.outlinewidth": "Width",
-  "betterblockoutline.config.general.info.outlinewidth": "How §6thick§r the §6block outline§r should be, in pixels"
+  "betterblockoutline.config.general.info.outlinewidth": "How §6thick§r the §6block outline§r should be, in pixels",
+
+  "betterblockoutline.config.tab.general": "§bGeneral",
+  "betterblockoutline.config.tab.outline_mods": "§aOutline Modifiers",
+  "betterblockoutline.config.tab.fill_mods": "§6Fill Modifiers",
+
+  "betterblockoutline.error.noselectedmodifier": "You have to select a modifier first!",
+
+  "betterblockoutline.config.button.addmodifier": "§aAdd Modifier",
+  "betterblockoutline.config.button.remove": "§cRemove",
+  "betterblockoutline.config.button.configure": "§bConfigure",
+  "betterblockoutline.config.button.active": "%s",
+
+  "betterblockoutline.colormodifier.active": "Enabled",
+  "betterblockoutline.colormodifier.info.active": "Whether or not the modifier is active",
+
+  "betterblockoutline.config.chroma.duration": "Duration",
+  "betterblockoutline.config.chroma.info.duration": "Sets the amount of seconds it takes for the chroma to loop.",
+  "betterblockoutline.config.chroma.offset": "Chroma Offset",
+  "betterblockoutline.config.chroma.info.offset": "Changes the offset of the chroma cycle in a percentage from 0-1.",
+
+  "betterblockoutline.config.blink.duration": "Duration",
+  "betterblockoutline.config.blink.info.duration": "Sets the amount of seconds it takes for the blink to loop.",
+  "betterblockoutline.config.blink.offset": "Blink Offset",
+  "betterblockoutline.config.blink.info.offset": "Changes the offset of the blink cycle in a percentage from 0-1.",
+
+
+  "betterblockoutline.colormodifiertype.chroma": "§cCh§aro§9ma",
+  "betterblockoutline.colormodifiertype.blink": "Blink"
 }

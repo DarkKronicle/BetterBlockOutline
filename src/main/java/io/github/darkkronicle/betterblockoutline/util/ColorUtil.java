@@ -28,4 +28,15 @@ public class ColorUtil {
         return new Color4f(red, green, blue, 1);
     }
 
+    public static float getBlink(double percent, float originalAlpha) {
+        if (percent == .5) {
+            percent = 1;
+        } else if (percent < .5) {
+            percent = percent * 2;
+        } else {
+            percent = 1 - ((percent - .5) * 2);
+        }
+        float easePercent = (float) (-(Math.cos(Math.PI * percent) - 1) / 2);
+        return easePercent * originalAlpha;
+    }
 }
