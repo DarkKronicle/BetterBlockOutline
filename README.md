@@ -10,16 +10,16 @@ Join the [Discord](https://discord.gg/WnaE3uZxDA) for help.
 
 Default ![Default](screenshots/pov_default.png)
 
-Fill ![Default](screenshots/pov_fill.png)
+Fill ![Fill](screenshots/pov_fill.png)
 
-See through ![Default](screenshots/pov_wirewhite.png)
+See through ![See through](screenshots/pov_wirewhite.png)
 
-See through with fill ![Default](screenshots/pov_seethrough.png)
+See through with fill ![Seethrough and fill](screenshots/pov_seethrough.png)
 
-Colors ![Default](screenshots/colors.png)
+Colors ![Colors](screenshots/colors.png)
 
-See through at an angle ![Default](screenshots/seethrough_angle.png)
+See through at an angle ![Seethrough at angle](screenshots/seethrough_angle.png)
 
-Complicated model ![Default](screenshots/seethrough_transparent.png)
+Complicated model ![Complicated model](screenshots/seethrough_transparent.png)
 
-Strips mode ![Default](screenshots/showcase_strip.png)
+Strips mode ![Strip mode](screenshots/showcase_strip.png)

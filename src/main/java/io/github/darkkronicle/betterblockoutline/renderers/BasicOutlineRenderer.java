@@ -3,8 +3,10 @@ package io.github.darkkronicle.betterblockoutline.renderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.Color4f;
+import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.OutlineType;
+import io.github.darkkronicle.betterblockoutline.config.gui.ColorModifierListScreen;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -17,6 +19,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
@@ -45,11 +48,13 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         RenderSystem.disableCull();
 
         Color4f fillColor = ConfigStorage.General.FILL_COLOR.config.getColor();
+        fillColor = processColor(fillColor, ColorModifierListScreen.Type.FILL);
         if (fillColor.a > 0) {
             drawOutlineBoxes(tessellator, matrices, buffer, camDif, fillColor, outline);
         }
 
         Color4f lineColor = ConfigStorage.General.OUTLINE_COLOR.config.getColor();
+        lineColor = processColor(lineColor, ColorModifierListScreen.Type.OUTLINE);
         if (lineColor.a > 0) {
             drawOutlineLines(tessellator, matrices, buffer, camDif, lineColor, outline);
         }
@@ -118,6 +123,16 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
             RenderingUtil.drawLine(entry, buffer, camDif, new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ), color);
         });
         tessellator.draw();
+    }
+
+    public Color4f processColor(Color4f color, ColorModifierListScreen.Type type) {
+        long ms = Util.getMeasuringTimeMs();
+        for (ConfigColorModifier mod : ConfigStorage.getColorMods(type.getConfigKey())) {
+            if (mod.getActive().config.getBooleanValue()) {
+                color = mod.getColorModifier().getColor(color, ms);
+            }
+        }
+        return color;
     }
 
 }

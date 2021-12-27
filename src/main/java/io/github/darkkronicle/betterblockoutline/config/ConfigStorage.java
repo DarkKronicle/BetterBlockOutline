@@ -1,6 +1,7 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -10,18 +11,23 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
-import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
+import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class ConfigStorage implements IConfigHandler {
 
     public static final String CONFIG_FILE_NAME = BetterBlockOutline.MOD_ID + ".json";
     public static final int CONFIG_VERSION = 1;
+
+    public static final Map<String, TreeSet<ConfigColorModifier>> COLOR_MODS = new HashMap<>();
 
     public static class General {
 
@@ -74,6 +80,30 @@ public class ConfigStorage implements IConfigHandler {
 
                 readOptions(root, General.NAME, General.OPTIONS);
 
+                JsonElement colorModsEl = root.get("color_modifiers");
+                if (colorModsEl != null && colorModsEl.isJsonObject()) {
+                    JsonObject colorMods = colorModsEl.getAsJsonObject();
+                    for (Map.Entry<String, JsonElement> value : colorMods.entrySet()) {
+                        if (!value.getValue().isJsonArray()) {
+                            continue;
+                        }
+                        TreeSet<ConfigColorModifier> config = getColorMods(value.getKey());
+                        for (JsonElement el : value.getValue().getAsJsonArray()) {
+                            if (!el.isJsonObject()) {
+                                continue;
+                            }
+                            JsonObject obj = el.getAsJsonObject();
+                            if (!obj.has("type")) {
+                                continue;
+                            }
+                            ColorModifierType type = ColorModifierType.CHROMA.fromString(obj.get("type").getAsString());
+                            ConfigColorModifier mod = new ConfigColorModifier(type);
+                            mod.load(el);
+                            config.add(mod);
+                        }
+                    }
+                }
+
                 int version = JsonUtils.getIntegerOrDefault(root, "configVersion", 0);
             }
         }
@@ -87,14 +117,27 @@ public class ConfigStorage implements IConfigHandler {
 
             writeOptions(root, General.NAME, General.OPTIONS);
 
-            root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
 
+            JsonObject colorMods = new JsonObject();
+
+            for (Map.Entry<String, TreeSet<ConfigColorModifier>> mods : COLOR_MODS.entrySet()) {
+                JsonArray modParent = new JsonArray();
+                for (ConfigColorModifier mod : mods.getValue()) {
+                    JsonObject modValue = mod.save();
+                    modValue.addProperty("type", mod.getType().getStringValue());
+                    modParent.add(modValue);
+                }
+                colorMods.add(mods.getKey(), modParent);
+            }
+
+            root.add("color_modifiers", colorMods);
+
+            root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
     }
 
-    public static void readOptions(
-            JsonObject root, String category, List<SaveableConfig<?>> options) {
+    public static void readOptions(JsonObject root, String category, List<SaveableConfig<?>> options) {
         JsonObject obj = JsonUtils.getNestedObject(root, category, false);
 
         if (obj != null) {
@@ -114,6 +157,15 @@ public class ConfigStorage implements IConfigHandler {
         for (SaveableConfig<?> option : options) {
             obj.add(option.key, option.config.getAsJsonElement());
         }
+    }
+
+    public static TreeSet<ConfigColorModifier> getColorMods(String key) {
+        TreeSet<ConfigColorModifier> mods = COLOR_MODS.get(key);
+        if (mods != null) {
+            return mods;
+        }
+        COLOR_MODS.put(key, new TreeSet<>());
+        return getColorMods(key);
     }
 
 }
