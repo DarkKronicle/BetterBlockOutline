@@ -1,9 +1,11 @@
 package io.github.darkkronicle.betterblockoutline.util;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import net.minecraft.client.util.math.Vector3d;
 
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Vector3f {
 
     public final float x;

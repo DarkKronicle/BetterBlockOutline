@@ -1,13 +1,15 @@
 package io.github.darkkronicle.betterblockoutline.interfaces;
 
-import net.minecraft.block.BlockState;
+import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
+import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 public interface IOverlayRenderer {
 
-    void render(MatrixStack matrices, Vector3d camera, Entity entity, BlockPos blockPosition, BlockState blockState);
+    void render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block);
 
 }

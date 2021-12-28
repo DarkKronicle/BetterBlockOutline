@@ -5,9 +5,14 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.Color4f;
 import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
+import io.github.darkkronicle.betterblockoutline.config.ConnectType;
 import io.github.darkkronicle.betterblockoutline.config.OutlineType;
 import io.github.darkkronicle.betterblockoutline.config.gui.ColorModifierListScreen;
+import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
+import io.github.darkkronicle.betterblockoutline.connectedblocks.ConnectedBlockPopulator;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
+import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
@@ -21,11 +26,15 @@ import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import net.minecraft.util.shape.VoxelShapes;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BasicOutlineRenderer implements IOverlayRenderer {
 
@@ -36,14 +45,37 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     }
 
     @Override
-    public void render(MatrixStack matrices, Vector3d camera, Entity entity, BlockPos pos, BlockState blockState) {
-        VoxelShape outline;
-        if (ConfigStorage.General.CUBE_OUTLINE.config.getBooleanValue()) {
-            outline = VoxelShapes.fullCube();
-        } else {
-            outline = blockState.getOutlineShape(client.world, pos, ShapeContext.of(entity));
+    public void render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
+        ConnectType type = (ConnectType) ConfigStorage.General.CONNECT_TYPE.config.getOptionListValue();
+        if (type == ConnectType.NONE || type == ConnectType.BLOCKS || block.getChildren().size() == 0) {
+            renderShape(matrices, camera, entity, block.getBlock(), block.getShape());
+            if (type == ConnectType.BLOCKS) {
+                for (AbstractConnectedBlock child : block.getChildren()) {
+                    renderShape(matrices, camera, entity, child.getBlock(), child.getShape());
+                }
+            }
+            return;
         }
-        Vector3d camDif = RenderingUtil.getCameraOffset(camera, pos);
+
+        if (type == ConnectType.SEAMLESS) {
+            VoxelShape shape = block.getShape();
+            for (AbstractConnectedBlock child : block.getChildren()) {
+                Vec3i offset = child.getOffset();
+                shape = VoxelShapes.union(shape, child.getShape().offset(offset.getX(), offset.getY(), offset.getZ()));
+            }
+            renderShape(matrices, camera, entity, block.getBlock(), shape);
+        }
+    }
+
+    public VoxelShape getShape(BlockPosState block, Entity entity) {
+        if (ConfigStorage.General.CUBE_OUTLINE.config.getBooleanValue()) {
+            return VoxelShapes.fullCube();
+        }
+        return block.getState().getOutlineShape(client.world, block.getPos(), ShapeContext.of(entity));
+    }
+
+    public void renderShape(MatrixStack matrices, Vector3d camera, Entity entity, BlockPosState block, VoxelShape outline) {
+        Vector3d camDif = RenderingUtil.getCameraOffset(camera, block.getPos());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 

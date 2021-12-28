@@ -60,7 +60,10 @@ public class ConfigStorage implements IConfigHandler {
         public final static SaveableConfig<ConfigBoolean> CUBE_OUTLINE = SaveableConfig.fromConfig("cubeOutline",
                 new ConfigBoolean(translate("cubeoutline"), false, translate("info.cubeoutline")));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE);
+        public final static SaveableConfig<ConfigOptionList> CONNECT_TYPE = SaveableConfig.fromConfig("connectType",
+                new ConfigOptionList(translate("connecttype"), ConnectType.SEAMLESS, translate("info.connecttype")));
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE, CONNECT_TYPE);
 
     }
 
