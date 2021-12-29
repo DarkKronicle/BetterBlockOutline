@@ -3,7 +3,12 @@ package io.github.darkkronicle.betterblockoutline.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.util.Color4f;
 import lombok.experimental.UtilityClass;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.math.BlockPos;
@@ -132,6 +137,38 @@ public class RenderingUtil {
         buffer.vertex(
                 entry.getPositionMatrix(), end.x, end.y, end.z
         ).color(color.r, color.g, color.b, color.a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
+    }
+
+    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position) {
+        drawString(matrices, renderer, string, camera, position, new Color4f(1, 1, 1, 1));
+    }
+
+    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, Color4f textColor) {
+        drawString(matrices, renderer, string, camera, position, 0.02f, 10, false, textColor, new Color4f(0, 0, 0, 0));
+    }
+
+    public void drawString(MatrixStack matrices, TextRenderer textRenderer, String string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
+        drawStringLines(matrices, textRenderer, new String[]{string}, camera, position, size, lineHeight, depth, textColor, backgroundColor);
+    }
+
+    public void drawStringLines(MatrixStack matrices, TextRenderer textRenderer, String[] string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
+        matrices.push();
+        matrices.translate(position.x - camera.getPos().x, position.y - camera.getPos().y + 0.07f, position.z - camera.getPos().z);
+        matrices.multiply(camera.getRotation());
+        matrices.scale(-size, -size, size);
+        setDepth(depth);
+        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+        VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+        float yOffset = ((float) (string.length - 1) / 2) * lineHeight;
+        matrices.translate(0, -yOffset, 0);
+        for (String line : string) {
+            float xOffset = -1 * (textRenderer.getWidth(line) / 2.0f);
+            textRenderer.draw(line, xOffset, 0.0f, textColor.intValue, false, matrix4f, immediate, !depth, backgroundColor.intValue, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            matrices.translate(0, lineHeight, 0);
+        }
+        immediate.draw();
+        RenderSystem.enableDepthTest();
+        matrices.pop();
     }
 
 }

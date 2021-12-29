@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface IOverlayRenderer {
 
-    void render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block);
+    boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block);
 
 }

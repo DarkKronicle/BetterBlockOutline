@@ -45,7 +45,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     }
 
     @Override
-    public void render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
+    public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
         ConnectType type = (ConnectType) ConfigStorage.General.CONNECT_TYPE.config.getOptionListValue();
         if (type == ConnectType.NONE || type == ConnectType.BLOCKS || block.getChildren().size() == 0) {
             renderShape(matrices, camera, entity, block.getBlock(), block.getShape());
@@ -54,7 +54,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
                     renderShape(matrices, camera, entity, child.getBlock(), child.getShape());
                 }
             }
-            return;
+            return true;
         }
 
         if (type == ConnectType.SEAMLESS) {
@@ -65,6 +65,8 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
             }
             renderShape(matrices, camera, entity, block.getBlock(), shape);
         }
+        matrices.push();
+        return true;
     }
 
     public VoxelShape getShape(BlockPosState block, Entity entity) {
