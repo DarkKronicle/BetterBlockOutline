@@ -52,16 +52,7 @@ public class BlockOutlineManager {
             return blocks;
         }
         if (state.getBlock() instanceof BedBlock) {
-            BedPart part = state.get(BedBlock.PART);
-            Direction otherDirection = state.get(HorizontalFacingBlock.FACING);
-            if (part == BedPart.HEAD) {
-                otherDirection = otherDirection.getOpposite();
-            }
-            BlockPos otherPos = pos.offset(otherDirection);
-            BlockState other = client.world.getBlockState(otherPos);
-            if (other.getBlock() instanceof BedBlock && other.get(BedBlock.PART) != part) {
-                blocks.add(new BlockPosState(otherPos, other));
-            }
+
         } else if (state.getBlock() instanceof ChestBlock) {
             ChestType type = state.get(ChestBlock.CHEST_TYPE);
             if (type != ChestType.SINGLE) {
