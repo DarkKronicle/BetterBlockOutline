@@ -20,7 +20,7 @@
   "betterblockoutline.config.general.info.outlinewidth": "How §6thick§r the §6block outline§r should be, in pixels",
 
   "betterblockoutline.config.general.connecttype": "Multi Block Connect Type",
-  "betterblockoutline.config.general.info.connecttype": "Describes how §6multi blocks§r like doors and pistons are outlined\n§bSeamless§r - Each outline is joined together\n§aBlocks§r - Render each block separately\n§cNone§r - Disable this feature",
+  "betterblockoutline.config.general.info.connecttype": "Describes how blocks that §6occupy more than one block§r, such as §6beds, doors, and pistons§r, are outlined\n§bSeamless§r - Each outline is joined together\n§aBlocks§r - Render each block separately\n§cNone§r - Disable this feature",
   "betterblockoutline.config.connecttype.seamless": "§bSeamless",
   "betterblockoutline.config.connecttype.blocks": "§aBlocks",
   "betterblockoutline.config.connecttype.none": "§cNone",
