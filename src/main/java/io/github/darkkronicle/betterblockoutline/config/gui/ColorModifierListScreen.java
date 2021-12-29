@@ -37,7 +37,7 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
         this.type = type;
 
         this.typeDropDown = new WidgetDropDownList<>(0, 0, 160, 18, 200, 10, ImmutableList.copyOf(ColorModifierType.values()), ColorModifierType::getDisplayName);
-        this.typeDropDown.setZLevel(this.getZOffset() - 100);
+        this.typeDropDown.setZLevel(this.getZOffset() + 100);
     }
 
     @Override
@@ -55,10 +55,11 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
 
         String addModifierName = StringUtils.translate("betterblockoutline.config.button.addmodifier");
         ButtonGeneric addModifier = new ButtonGeneric(this.width - 10, y, -1, true, addModifierName);
-        this.setListPosition(this.getListX(), y + 20);
-        this.reCreateListWidget();
         this.typeDropDown.setPosition(addModifier.getX() - typeDropDown.getWidth() - 4, y + 1);
         this.addWidget(typeDropDown);
+
+        this.setListPosition(this.getListX(), y + 20);
+        this.reCreateListWidget();
 
         this.addButton(addModifier, (button, mouseButton) -> {
             if (typeDropDown.getSelectedEntry() == null) {

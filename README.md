@@ -25,3 +25,5 @@ See through at an angle ![Seethrough at angle](screenshots/seethrough_angle.png)
 Complicated model ![Complicated model](screenshots/seethrough_transparent.png)
 
 Strips mode ![Strip mode](screenshots/showcase_strip.png)
+
+Double block ![Double block](screenshots/double_block.png)
