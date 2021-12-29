@@ -25,6 +25,14 @@
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "minecraft": ">=1.18"
+    "minecraft": ">=1.17",
+    "malilib": ">=0.10.0-dev.20"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/WnaE3uZxDA"
+      }
+    }
   }
 }

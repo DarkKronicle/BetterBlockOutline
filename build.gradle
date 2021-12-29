@@ -18,7 +18,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "fi.dy.masa.malilib:malilib-fabric-1.18.0:${project.malilib_version}"
+    modImplementation "fi.dy.masa.malilib:malilib-fabric-1.17.1:${project.malilib_version}"
     modCompileOnly "io.github.prospector:modmenu:${project.modmenu_version}"
 }
 
@@ -33,7 +33,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release = 17
+    it.options.release = 16
 }
 
 jar {
