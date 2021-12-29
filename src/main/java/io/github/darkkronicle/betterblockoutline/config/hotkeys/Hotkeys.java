@@ -1,7 +1,8 @@
-package io.github.darkkronicle.betterblockoutline.config;
+package io.github.darkkronicle.betterblockoutline.config.hotkeys;
 
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
+import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 
 public class Hotkeys {
 
