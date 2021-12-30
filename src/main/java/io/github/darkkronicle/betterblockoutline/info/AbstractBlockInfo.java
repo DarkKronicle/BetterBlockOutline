@@ -49,7 +49,7 @@ public abstract class AbstractBlockInfo implements IOverlayRenderer, Comparable<
     public AbstractBlockInfo(Order order, String name, String translationName, String translationHover) {
         this.order = order;
         active = SaveableConfig.fromConfig(name, new ConfigBoolean(StringUtils.translate(translationName), false, StringUtils.translate(translationHover)));
-        activeKey = SaveableConfig.fromConfig(name, new HotkeyCustomName("betterblockoutline.blockinfo.hotkeyname", "", KeybindSettings.MODIFIER_INGAME, "betterblockinfo.blockinfo.hotkey", translationName));
+        activeKey = SaveableConfig.fromConfig(name, new HotkeyCustomName("betterblockoutline.blockinfo.hotkeyname", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.blockinfo.info.hotkeyname", translationName));
     }
 
     public abstract boolean shouldRender(AbstractConnectedBlock block);

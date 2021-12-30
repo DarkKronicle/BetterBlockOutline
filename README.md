@@ -27,3 +27,9 @@ Complicated model ![Complicated model](screenshots/seethrough_transparent.png)
 Strips mode ![Strip mode](screenshots/showcase_strip.png)
 
 Double block ![Double block](screenshots/double_block.png)
+
+## Credits
+
+Code & Mastermind: DarkKronicle
+
+Language man: Chronos22 (You would not understand the mod without this guy)

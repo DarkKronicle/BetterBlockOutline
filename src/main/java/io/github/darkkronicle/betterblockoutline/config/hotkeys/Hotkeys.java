@@ -23,12 +23,12 @@ public class Hotkeys {
             new ConfigHotkey("betterblockoutline.config.hotkey.toggleinfoactive", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.toggleinfoactive"));
 
     public final static SaveableConfig<ConfigHotkey> DISABLE_ALL_INFO = SaveableConfig.fromConfig("disableAllInfo",
-            new ConfigHotkey("", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.disableallinfo"));
+            new ConfigHotkey("betterblockoutline.config.hotkey.disableallinfo", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.disableallinfo"));
 
 
     public final static ImmutableList<SaveableConfig<ConfigHotkey>> KEYS = ImmutableList.of(MENU, TOGGLE_INFO_ACTIVE, DISABLE_ALL_INFO);
 
-    public final static ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(MENU);
+    public final static ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(MENU, TOGGLE_INFO_ACTIVE, DISABLE_ALL_INFO);
 
     public final static ImmutableList<ConfigHotkey> RAW_KEYBINDS = Util.make(() -> {
         List<ConfigHotkey> keys = new ArrayList<>();
@@ -38,9 +38,5 @@ public class Hotkeys {
         return ImmutableList.copyOf(keys);
     });
 
-    public static String appendActiveHotkey(String translation) {
-        String format = StringUtils.translate(translation);
-        String hotkeyName = StringUtils.translate("betterblockoutline.blockinfo.hotkeyname");
-        return hotkeyName.replaceAll("<hotkey>", format);
-    }
+
 }

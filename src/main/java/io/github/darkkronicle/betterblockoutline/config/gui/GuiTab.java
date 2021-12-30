@@ -18,8 +18,8 @@ public enum GuiTab {
     GENERAL("general", wrapSaveableOptions(ConfigStorage.General.OPTIONS)),
     OUTLINE_MODS("outline_mods", wrapScreen((parent) -> new ColorModifierListScreen(ColorModifierListScreen.Type.OUTLINE))),
     FILL_MODS("fill_mods", wrapScreen((parent) -> new ColorModifierListScreen(ColorModifierListScreen.Type.FILL))),
-    INFO("info", wrapSaveableOptions(() -> {
-        List<SaveableConfig<? extends IConfigBase>> info = new ArrayList<>(ConfigStorage.Info.OPTIONS);
+    BLOCK_INFO("blockinfo", wrapSaveableOptions(() -> {
+        List<SaveableConfig<? extends IConfigBase>> info = new ArrayList<>(ConfigStorage.BlockInfo.OPTIONS);
         info.addAll(InfoRenderer.getInstance().getActiveConfigs());
         return info;
     })),

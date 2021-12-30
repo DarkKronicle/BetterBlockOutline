@@ -69,10 +69,10 @@ public class ConfigStorage implements IConfigHandler {
 
     }
 
-    public static class Info {
+    public static class BlockInfo {
 
         private static String translate(String string) {
-            return StringUtils.translate("betterblockoutline.config.info." + string);
+            return StringUtils.translate("betterblockoutline.config.blockinfo." + string);
         }
 
         public final static String NAME = "info";
@@ -81,7 +81,7 @@ public class ConfigStorage implements IConfigHandler {
                 new ConfigBoolean(translate("active"), false, translate("info.active")));
 
         public final static SaveableConfig<ConfigDouble> TEXT_SIZE = SaveableConfig.fromConfig("textSize",
-                new ConfigDouble(translate("textsize"), 0.02f, 0.001, 0.5, translate("info.textsize")));
+                new ConfigDouble(translate("textsize"), 0.02, 0.001, 0.5, translate("info.textsize")));
 
         public final static SaveableConfig<ConfigDouble> LINE_HEIGHT = SaveableConfig.fromConfig("lineHeight",
                 new ConfigDouble(translate("lineheight"), 10, 3, 30, translate("info.lineheight")));
@@ -116,8 +116,8 @@ public class ConfigStorage implements IConfigHandler {
                 JsonObject root = element.getAsJsonObject();
 
                 readOptions(root, General.NAME, General.OPTIONS);
-                readOptions(root, Info.NAME, Info.OPTIONS);
-                readOptions(root, Info.NAME, InfoRenderer.getInstance().getActiveConfigs());
+                readOptions(root, BlockInfo.NAME, BlockInfo.OPTIONS);
+                readOptions(root, BlockInfo.NAME, InfoRenderer.getInstance().getActiveConfigs());
                 readOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
                 readOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
 
@@ -157,8 +157,8 @@ public class ConfigStorage implements IConfigHandler {
             JsonObject root = new JsonObject();
 
             writeOptions(root, General.NAME, General.OPTIONS);
-            writeOptions(root, Info.NAME, Info.OPTIONS);
-            writeOptions(root, Info.NAME, InfoRenderer.getInstance().getActiveConfigs());
+            writeOptions(root, BlockInfo.NAME, BlockInfo.OPTIONS);
+            writeOptions(root, BlockInfo.NAME, InfoRenderer.getInstance().getActiveConfigs());
             writeOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
             writeOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
 
