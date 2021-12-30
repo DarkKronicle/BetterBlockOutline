@@ -13,8 +13,11 @@ import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
+import io.github.darkkronicle.betterblockoutline.config.hotkeys.Hotkeys;
+import io.github.darkkronicle.betterblockoutline.renderers.InfoRenderer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 public class ConfigStorage implements IConfigHandler {
 
@@ -67,6 +69,33 @@ public class ConfigStorage implements IConfigHandler {
 
     }
 
+    public static class Info {
+
+        private static String translate(String string) {
+            return StringUtils.translate("betterblockoutline.config.info." + string);
+        }
+
+        public final static String NAME = "info";
+
+        public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
+                new ConfigBoolean(translate("active"), false, translate("info.active")));
+
+        public final static SaveableConfig<ConfigDouble> TEXT_SIZE = SaveableConfig.fromConfig("textSize",
+                new ConfigDouble(translate("textsize"), 0.02f, 0.001, 0.5, translate("info.textsize")));
+
+        public final static SaveableConfig<ConfigDouble> LINE_HEIGHT = SaveableConfig.fromConfig("lineHeight",
+                new ConfigDouble(translate("lineheight"), 10, 3, 30, translate("info.lineheight")));
+
+        public final static SaveableConfig<ConfigColor> TEXT_COLOR = SaveableConfig.fromConfig("textColor",
+                new ConfigColor(translate("textcolor"), "#FFFFFFFF",  translate("info.textcolor")));
+
+        public final static SaveableConfig<ConfigColor> BACKGROUND_COLOR = SaveableConfig.fromConfig("backgroundColor",
+                new ConfigColor(translate("backgroundcolor"), "#20000000",  translate("info.backgroundcolor")));
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, TEXT_SIZE, LINE_HEIGHT, TEXT_COLOR, BACKGROUND_COLOR);
+
+    }
+
     @Override
     public void load() {
         loadFromFile();
@@ -87,6 +116,10 @@ public class ConfigStorage implements IConfigHandler {
                 JsonObject root = element.getAsJsonObject();
 
                 readOptions(root, General.NAME, General.OPTIONS);
+                readOptions(root, Info.NAME, Info.OPTIONS);
+                readOptions(root, Info.NAME, InfoRenderer.getInstance().getActiveConfigs());
+                readOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
+                readOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
 
                 COLOR_MODS.clear();
                 JsonElement colorModsEl = root.get("color_modifiers");
@@ -124,6 +157,10 @@ public class ConfigStorage implements IConfigHandler {
             JsonObject root = new JsonObject();
 
             writeOptions(root, General.NAME, General.OPTIONS);
+            writeOptions(root, Info.NAME, Info.OPTIONS);
+            writeOptions(root, Info.NAME, InfoRenderer.getInstance().getActiveConfigs());
+            writeOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
+            writeOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
 
 
             JsonObject colorMods = new JsonObject();

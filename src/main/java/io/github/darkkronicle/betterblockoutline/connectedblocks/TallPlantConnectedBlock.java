@@ -49,6 +49,6 @@ public class TallPlantConnectedBlock extends AbstractConnectedBlock {
     }
 
     private static boolean isDouble(Block block) {
-        return block instanceof TallPlantBlock && !(block instanceof TallSeagrassBlock || block instanceof SmallDripleafBlock);
+        return block instanceof TallPlantBlock && !(block instanceof SmallDripleafBlock);
     }
 }

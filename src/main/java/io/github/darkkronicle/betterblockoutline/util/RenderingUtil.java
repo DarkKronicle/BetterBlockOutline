@@ -143,15 +143,24 @@ public class RenderingUtil {
         drawString(matrices, renderer, string, camera, position, new Color4f(1, 1, 1, 1));
     }
 
+
     public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, Color4f textColor) {
-        drawString(matrices, renderer, string, camera, position, 0.02f, 10, false, textColor, new Color4f(0, 0, 0, 0));
+        drawString(matrices, renderer, string, camera, position, 0.02f, false, textColor);
+    }
+
+    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, float size, boolean depth, Color4f textColor) {
+        drawString(matrices, renderer, string, camera, position, size, 10, depth, textColor, new Color4f(0, 0, 0, 0));
     }
 
     public void drawString(MatrixStack matrices, TextRenderer textRenderer, String string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
         drawStringLines(matrices, textRenderer, new String[]{string}, camera, position, size, lineHeight, depth, textColor, backgroundColor);
     }
 
-    public void drawStringLines(MatrixStack matrices, TextRenderer textRenderer, String[] string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
+    public void drawStringLines(MatrixStack matrices, TextRenderer renderer, String[] lines, Camera camera, Vector3d position, float size, boolean depth, Color4f textColor) {
+        drawStringLines(matrices, renderer, lines, camera, position, size, 10, depth, textColor, new Color4f(0, 0, 0, 0));
+    }
+
+    public void drawStringLines(MatrixStack matrices, TextRenderer textRenderer, String[] lines, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
         matrices.push();
         matrices.translate(position.x - camera.getPos().x, position.y - camera.getPos().y + 0.07f, position.z - camera.getPos().z);
         matrices.multiply(camera.getRotation());
@@ -159,9 +168,9 @@ public class RenderingUtil {
         setDepth(depth);
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
         VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        float yOffset = ((float) (string.length - 1) / 2) * lineHeight;
+        float yOffset = ((float) (lines.length - 1) / 2) * lineHeight;
         matrices.translate(0, -yOffset, 0);
-        for (String line : string) {
+        for (String line : lines) {
             float xOffset = -1 * (textRenderer.getWidth(line) / 2.0f);
             textRenderer.draw(line, xOffset, 0.0f, textColor.intValue, false, matrix4f, immediate, !depth, backgroundColor.intValue, LightmapTextureManager.MAX_LIGHT_COORDINATE);
             matrices.translate(0, lineHeight, 0);

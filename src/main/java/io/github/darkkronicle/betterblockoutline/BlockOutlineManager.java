@@ -34,7 +34,7 @@ public class BlockOutlineManager {
 
     private BlockOutlineManager() {
         renderers.add(new BasicOutlineRenderer());
-        renderers.add(new InfoRenderer());
+        renderers.add(InfoRenderer.getInstance());
         client = MinecraftClient.getInstance();
     }
 

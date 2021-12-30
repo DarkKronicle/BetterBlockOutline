@@ -29,6 +29,7 @@
   "betterblockoutline.config.tab.general": "§bGeneral",
   "betterblockoutline.config.tab.outline_mods": "§aOutline Modifiers",
   "betterblockoutline.config.tab.fill_mods": "§6Fill Modifiers",
+  "betterblockoutline.config.tab.fill_mods": "§cHotkeys",
 
   "betterblockoutline.error.noselectedmodifier": "You have to select a modifier first!",
 
@@ -52,5 +53,8 @@
 
 
   "betterblockoutline.colormodifiertype.chroma": "§cCh§aro§9ma",
-  "betterblockoutline.colormodifiertype.blink": "Blink"
+  "betterblockoutline.colormodifiertype.blink": "Blink",
+
+  "betterblockoutline.blockinfo.hotkeyname": "<hotkey> Hotkey",
+  "betterblockoutline.blockinfo.facingtext": "Facing Text"
 }
