@@ -7,6 +7,7 @@ import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.info.AbstractBlockInfo;
+import io.github.darkkronicle.betterblockoutline.info.NoteblockInfo;
 import io.github.darkkronicle.betterblockoutline.info.RedstoneInfo;
 import io.github.darkkronicle.betterblockoutline.info.TextBlockInfo;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
@@ -55,6 +56,7 @@ public class InfoRenderer implements IOverlayRenderer {
 
     public void setup() {
         add(new RedstoneInfo());
+        add(new NoteblockInfo());
         add(TextBlockInfo.constructSimple(AbstractBlockInfo.Order.ALL, "coordinatestext", (block) -> true, (block) -> {
             BlockPos pos = block.getBlock().getPos();
             return "X: " + pos.getX() + "\nY: " + pos.getY() + "\nZ: " + pos.getZ();
