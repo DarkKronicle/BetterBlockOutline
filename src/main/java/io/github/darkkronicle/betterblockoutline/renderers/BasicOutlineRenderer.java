@@ -69,13 +69,6 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         return true;
     }
 
-    public VoxelShape getShape(BlockPosState block, Entity entity) {
-        if (ConfigStorage.General.CUBE_OUTLINE.config.getBooleanValue()) {
-            return VoxelShapes.fullCube();
-        }
-        return block.getState().getOutlineShape(client.world, block.getPos(), ShapeContext.of(entity));
-    }
-
     public void renderShape(MatrixStack matrices, Vector3d camera, Entity entity, BlockPosState block, VoxelShape outline) {
         Vector3d camDif = RenderingUtil.getCameraOffset(camera, block.getPos());
         Tessellator tessellator = Tessellator.getInstance();

@@ -3,6 +3,7 @@ package io.github.darkkronicle.betterblockoutline.util;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import net.minecraft.client.util.math.Vector3d;
+import net.minecraft.util.math.Quaternion;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -26,5 +27,13 @@ public class Vector3f {
         return new Vector3d(this.x, this.y, this.z);
     }
 
+    public Vector3f rotate(Quaternion rotation) {
+        Quaternion quaternion = new Quaternion(rotation);
+        quaternion.hamiltonProduct(new Quaternion(this.x, this.y, this.z, 0.0f));
+        Quaternion quaternion2 = new Quaternion(rotation);
+        quaternion2.conjugate();
+        quaternion.hamiltonProduct(quaternion2);
+        return new Vector3f(quaternion.getX(), quaternion.getY(), quaternion.getZ());
+    }
 
 }

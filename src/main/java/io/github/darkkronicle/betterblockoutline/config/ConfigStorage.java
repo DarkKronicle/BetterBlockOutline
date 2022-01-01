@@ -17,7 +17,9 @@ import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
 import io.github.darkkronicle.betterblockoutline.config.hotkeys.Hotkeys;
-import io.github.darkkronicle.betterblockoutline.renderers.InfoRenderer;
+import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.DirectionArrow;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,10 +71,10 @@ public class ConfigStorage implements IConfigHandler {
 
     }
 
-    public static class BlockInfo {
+    public static class BlockInfo2d {
 
         private static String translate(String string) {
-            return StringUtils.translate("betterblockoutline.config.blockinfo." + string);
+            return StringUtils.translate("betterblockoutline.config.blockinfo2d." + string);
         }
 
         public final static String NAME = "info";
@@ -96,6 +98,41 @@ public class ConfigStorage implements IConfigHandler {
 
     }
 
+    public static class BlockInfo3d {
+
+        private static String translate(String string) {
+            return StringUtils.translate("betterblockoutline.config.blockinfo3d." + string);
+        }
+
+        public final static String NAME = "blockinfo3d";
+
+        public final static SaveableConfig<ConfigDouble> LINE_WIDTH = SaveableConfig.fromConfig("lineWidth",
+                new ConfigDouble(translate("linewidth"), 2, 0.1, 30, translate("info.linewidth")));
+
+        public final static SaveableConfig<ConfigColor> LINE_COLOR = SaveableConfig.fromConfig("lineColor",
+                new ConfigColor(translate("linecolor"), "#FFAFAFAF", translate("info.linecolor")));
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(LINE_WIDTH, LINE_COLOR);
+
+    }
+
+    public static class BlockInfoDirectionArrow {
+
+        private static String translate(String string) {
+            return StringUtils.translate("betterblockoutline.config.directionarrow." + string);
+        }
+
+        public final static String NAME = "directionarrow";
+
+        public final static SaveableConfig<ConfigOptionList> ARROW_TYPE = SaveableConfig.fromConfig("arrowType",
+                new ConfigOptionList(translate("arrowtype"), DirectionArrow.ArrowType.LINE_ARROW, translate("info.arrowtype")));
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ARROW_TYPE);
+
+    }
+
+
+
     @Override
     public void load() {
         loadFromFile();
@@ -116,10 +153,14 @@ public class ConfigStorage implements IConfigHandler {
                 JsonObject root = element.getAsJsonObject();
 
                 readOptions(root, General.NAME, General.OPTIONS);
-                readOptions(root, BlockInfo.NAME, BlockInfo.OPTIONS);
-                readOptions(root, BlockInfo.NAME, InfoRenderer.getInstance().getActiveConfigs());
+                readOptions(root, BlockInfo2d.NAME, BlockInfo2d.OPTIONS);
+                readOptions(root, BlockInfo2d.NAME, BlockInfo2dRenderer.getInstance().getActiveConfigs());
+                readOptions(root, BlockInfo3d.NAME, BlockInfo3d.OPTIONS);
+                readOptions(root, BlockInfo3d.NAME, BlockInfo3dRenderer.getInstance().getActiveConfigs());
+                readOptions(root, BlockInfoDirectionArrow.NAME, BlockInfoDirectionArrow.OPTIONS);
                 readOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
-                readOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
+                readOptions(root, Hotkeys.NAME, BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
+                readOptions(root, Hotkeys.NAME, BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
 
                 COLOR_MODS.clear();
                 JsonElement colorModsEl = root.get("color_modifiers");
@@ -157,10 +198,14 @@ public class ConfigStorage implements IConfigHandler {
             JsonObject root = new JsonObject();
 
             writeOptions(root, General.NAME, General.OPTIONS);
-            writeOptions(root, BlockInfo.NAME, BlockInfo.OPTIONS);
-            writeOptions(root, BlockInfo.NAME, InfoRenderer.getInstance().getActiveConfigs());
+            writeOptions(root, BlockInfo2d.NAME, BlockInfo2d.OPTIONS);
+            writeOptions(root, BlockInfo2d.NAME, BlockInfo2dRenderer.getInstance().getActiveConfigs());
+            writeOptions(root, BlockInfo3d.NAME, BlockInfo3d.OPTIONS);
+            writeOptions(root, BlockInfo3d.NAME, BlockInfo3dRenderer.getInstance().getActiveConfigs());
+            writeOptions(root, BlockInfoDirectionArrow.NAME, BlockInfoDirectionArrow.OPTIONS);
             writeOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
-            writeOptions(root, Hotkeys.NAME, InfoRenderer.getInstance().getHotkeyConfigs());
+            writeOptions(root, Hotkeys.NAME, BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
+            writeOptions(root, Hotkeys.NAME, BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
 
 
             JsonObject colorMods = new JsonObject();

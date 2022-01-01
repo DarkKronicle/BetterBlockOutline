@@ -1,4 +1,4 @@
-package io.github.darkkronicle.betterblockoutline.info;
+package io.github.darkkronicle.betterblockoutline.blockinfo;
 
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
@@ -6,19 +6,14 @@ import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.config.hotkeys.HotkeyCustomName;
-import io.github.darkkronicle.betterblockoutline.config.hotkeys.Hotkeys;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
-import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
-import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
-public abstract class AbstractBlockInfo implements IOverlayRenderer, Comparable<AbstractBlockInfo> {
+public abstract class AbstractBlockInfo implements Comparable<AbstractBlockInfo> {
 
     @AllArgsConstructor
     public enum Order {
@@ -49,24 +44,13 @@ public abstract class AbstractBlockInfo implements IOverlayRenderer, Comparable<
     public AbstractBlockInfo(Order order, String name, String translationName, String translationHover) {
         this.order = order;
         active = SaveableConfig.fromConfig(name, new ConfigBoolean(StringUtils.translate(translationName), false, StringUtils.translate(translationHover)));
-        activeKey = SaveableConfig.fromConfig(name, new HotkeyCustomName("betterblockoutline.blockinfo.hotkeyname", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.blockinfo.info.hotkeyname", translationName));
+        activeKey = SaveableConfig.fromConfig(name, new HotkeyCustomName("betterblockoutline.blockinfo2d.hotkeyname", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.blockinfo2d.info.hotkeyname", translationName));
     }
 
     public abstract boolean shouldRender(AbstractConnectedBlock block);
 
-    public abstract void renderInfo(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block);
-
     public boolean isActive() {
         return active.config.getBooleanValue();
-    }
-
-    @Override
-    public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
-        if (isActive() && shouldRender(block)) {
-            renderInfo(matrices, camera, entity, block);
-            return true;
-        }
-        return false;
     }
 
     @Override

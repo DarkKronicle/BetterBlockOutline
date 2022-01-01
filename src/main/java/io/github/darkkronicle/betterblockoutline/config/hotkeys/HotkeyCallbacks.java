@@ -7,8 +7,9 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.util.InfoUtils;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.gui.ConfigScreen;
-import io.github.darkkronicle.betterblockoutline.info.AbstractBlockInfo;
-import io.github.darkkronicle.betterblockoutline.renderers.InfoRenderer;
+import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
 
 public class HotkeyCallbacks {
 
@@ -16,8 +17,11 @@ public class HotkeyCallbacks {
         Callbacks callback = new Callbacks();
         Hotkeys.MENU.config.getKeybind().setCallback(callback);
         Hotkeys.DISABLE_ALL_INFO.config.getKeybind().setCallback(callback);
-        Hotkeys.TOGGLE_INFO_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo.ACTIVE.config));
-        for (AbstractBlockInfo info : InfoRenderer.getInstance().getRenderers()) {
+        Hotkeys.TOGGLE_INFO_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo2d.ACTIVE.config));
+        for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
+            info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
+        }
+        for (AbstractBlockInfo info : BlockInfo3dRenderer.getInstance().getRenderers()) {
             info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
         }
     }
@@ -31,7 +35,7 @@ public class HotkeyCallbacks {
                 return true;
             }
             if (key == Hotkeys.DISABLE_ALL_INFO.config.getKeybind()) {
-                for (AbstractBlockInfo info : InfoRenderer.getInstance().getRenderers()) {
+                for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
                     info.getActive().config.setBooleanValue(false);
                 }
                 InfoUtils.printActionbarMessage("betterblockoutline.message.disableall");

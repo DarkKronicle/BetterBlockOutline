@@ -1,12 +1,10 @@
 package io.github.darkkronicle.betterblockoutline;
 
-import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
-import io.github.darkkronicle.betterblockoutline.config.ConnectType;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.ConnectedBlockPopulator;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.BasicOutlineRenderer;
-import io.github.darkkronicle.betterblockoutline.renderers.InfoRenderer;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 import lombok.Getter;
 import net.minecraft.block.BlockState;
@@ -32,9 +30,11 @@ public class BlockOutlineManager {
     @Getter
     private final List<IOverlayRenderer> renderers = new ArrayList<>();
 
+    public void add(IOverlayRenderer renderer) {
+        renderers.add(renderer);
+    }
+
     private BlockOutlineManager() {
-        renderers.add(new BasicOutlineRenderer());
-        renderers.add(InfoRenderer.getInstance());
         client = MinecraftClient.getInstance();
     }
 

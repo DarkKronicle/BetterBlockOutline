@@ -1,4 +1,4 @@
-package io.github.darkkronicle.betterblockoutline.info;
+package io.github.darkkronicle.betterblockoutline.blockinfo.info2d;
 
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import net.minecraft.block.BlockState;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RedstoneInfo extends TextBlockInfo {
+public class RedstoneInfo extends AbstractBlockInfo2d {
 
     public RedstoneInfo() {
         super(
                 Order.BLOCK,
                 "redstoneinfo",
-                "betterblockoutline.blockinfo.redstoneinfo",
-                "betterblockoutline.blockinfo.info.redstoneinfo"
+                "betterblockoutline.blockinfo2d.redstoneinfo",
+                "betterblockoutline.blockinfo2d.info.redstoneinfo"
         );
     }
 
@@ -28,7 +28,7 @@ public class RedstoneInfo extends TextBlockInfo {
     }
 
     @Override
-    public String[] getLines(AbstractConnectedBlock block) {
+    public Optional<List<String>> getLines(AbstractConnectedBlock block) {
         BlockState state = block.getBlock().getState();
         List<String> lines = new ArrayList<>();
 
@@ -40,6 +40,6 @@ public class RedstoneInfo extends TextBlockInfo {
         state.getOrEmpty(RepeaterBlock.LOCKED).ifPresent(locked -> lines.add("Locked: " + locked));
         state.getOrEmpty(RepeaterBlock.DELAY).ifPresent(delay -> lines.add("Delay: " + delay));
 
-        return lines.toArray(new String[0]);
+        return Optional.of(lines);
     }
 }

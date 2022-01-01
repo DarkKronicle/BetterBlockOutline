@@ -43,15 +43,16 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
     @Override
     public void initGui() {
         if (type == Type.OUTLINE) {
-            ConfigScreen.TAB = GuiTab.OUTLINE_MODS;
+            ConfigScreen.TAB.setNestedSelection(ConfigScreen.TAB.get("outline_mods"));
         } else if (type == Type.FILL) {
-            ConfigScreen.TAB = GuiTab.FILL_MODS;
+            ConfigScreen.TAB.setNestedSelection(ConfigScreen.TAB.get("fill_mods"));
         }
 
         int y = 26;
 
         super.initGui();
-        y = (22 * ConfigScreen.addButtons(this, 10, 26)) + y;
+        y += (22 * ConfigScreen.addTabButtons(this, 10, y));
+        y += (22 * ConfigScreen.addNestedTabButtons(this, ConfigScreen.TAB, 10, y));
 
         String addModifierName = StringUtils.translate("betterblockoutline.config.button.addmodifier");
         ButtonGeneric addModifier = new ButtonGeneric(this.width - 10, y, -1, true, addModifierName);
