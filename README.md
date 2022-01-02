@@ -28,6 +28,12 @@ Strips mode ![Strip mode](screenshots/showcase_strip.png)
 
 Double block ![Double block](screenshots/double_block.png)
 
+More in `./screenshots`
+
+## Support
+
+If you want to support this mod I would heavily appreciate it if you would share it with your friends. Feel free to come to the [Discord](https://discord.gg/WnaE3uZxDA) to submit bugs, request features, or just hang around.
+
 ## Credits
 
 Code & Mastermind: DarkKronicle
