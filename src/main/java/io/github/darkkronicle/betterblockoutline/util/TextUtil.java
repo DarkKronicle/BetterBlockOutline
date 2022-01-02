@@ -17,7 +17,11 @@ public class TextUtil {
                     '\u2088', '\u2089'
             };
 
-    /** Gets a superscript from a number */
+    /**
+     * Converts a number into a superscript representation.
+     * @param num Number to convert
+     * @return Number out of superscript
+     */
     public String toSuperscript(int num) {
         StringBuilder sb = new StringBuilder();
         do {
@@ -26,6 +30,11 @@ public class TextUtil {
         return sb.reverse().toString();
     }
 
+    /**
+     * Converts a number into a subscript representation.
+     * @param num Number to convert
+     * @return Number out of subscript
+     */
     public String toSubscript(int num) {
         StringBuilder sb = new StringBuilder();
         do {

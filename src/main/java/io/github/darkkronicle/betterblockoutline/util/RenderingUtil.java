@@ -143,7 +143,6 @@ public class RenderingUtil {
         drawString(matrices, renderer, string, camera, position, new Color4f(1, 1, 1, 1));
     }
 
-
     public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, Color4f textColor) {
         drawString(matrices, renderer, string, camera, position, 0.02f, false, textColor);
     }

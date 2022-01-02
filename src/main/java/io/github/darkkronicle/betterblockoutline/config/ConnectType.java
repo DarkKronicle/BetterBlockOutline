@@ -4,6 +4,9 @@ import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import lombok.AllArgsConstructor;
 
+/**
+ * Type of way to connect blocks rendered over.;
+ */
 @AllArgsConstructor
 public enum ConnectType implements IConfigOptionListEntry {
     NONE("none"),

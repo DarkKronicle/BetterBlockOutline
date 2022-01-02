@@ -13,6 +13,10 @@ public abstract class AbstractBlockInfo3d extends AbstractBlockInfo implements I
         super(order, name, translationName, translationHover);
     }
 
+    /**
+     * Renders the current outline block.
+     * @return True if it should not render other outlines, false if it should.
+     */
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
         if (isActive() && shouldRender(block)) {
@@ -22,6 +26,13 @@ public abstract class AbstractBlockInfo3d extends AbstractBlockInfo implements I
         return false;
     }
 
+    /**
+     * Renders the block information
+     * @param matrices {@link MatrixStack} matrices
+     * @param camera A vector containing the {@link net.minecraft.client.render.Camera} position
+     * @param entity The {@link Entity} that is requesting the block info. (Should just be a {@link net.minecraft.entity.player.PlayerEntity}
+     * @param block {@link AbstractConnectedBlock} containing information of currently hovered block.
+     */
     public abstract void renderInfo(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block);
 
 }

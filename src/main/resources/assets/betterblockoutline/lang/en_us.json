@@ -27,7 +27,7 @@
   "betterblockoutline.config.connecttype.blocks": "§aBlocks",
   "betterblockoutline.config.connecttype.none": "§cNone",
 
-
+  "betterblockoutline.config.tab.color_mods": "§2Color Modifiers",
   "betterblockoutline.config.tab.outline_mods": "§aOutline Modifiers",
   "betterblockoutline.config.tab.fill_mods": "§6Fill Modifiers",
   "betterblockoutline.error.noselectedmodifier": "You have to select a modifier first!",
@@ -36,22 +36,24 @@
   "betterblockoutline.config.button.configure": "§bConfigure",
   "betterblockoutline.config.button.active": "%s",
   "betterblockoutline.colormodifier.active": "Enabled",
-  "betterblockoutline.colormodifier.info.active": "Whether or not the modifier is active",
+  "betterblockoutline.colormodifier.info.active": "Whether or not the §6modifier is active§r",
 
   "betterblockoutline.config.chroma.duration": "Duration",
-  "betterblockoutline.config.chroma.info.duration": "Sets the amount of seconds it takes for the chroma to loop.",
+  "betterblockoutline.config.chroma.info.duration": "Sets the §6amount of seconds§r it takes for the §6chroma§r to loop.",
   "betterblockoutline.config.chroma.offset": "Chroma Offset",
-  "betterblockoutline.config.chroma.info.offset": "Changes the offset of the chroma cycle in a percentage from 0-1.",
+  "betterblockoutline.config.chroma.info.offset": "Changes the §6offset of the chroma cycle§r in a percentage from 0-1.",
 
   "betterblockoutline.config.blink.duration": "Duration",
-  "betterblockoutline.config.blink.info.duration": "Sets the amount of seconds it takes for the blink to loop.",
+  "betterblockoutline.config.blink.info.duration": "Sets the §6amount of seconds§r it takes for the §6blink§r to loop.",
   "betterblockoutline.config.blink.offset": "Blink Offset",
-  "betterblockoutline.config.blink.info.offset": "Changes the offset of the blink cycle in a percentage from 0-1.",
+  "betterblockoutline.config.blink.info.offset": "Changes the §6offset of the blink cycle§r in a percentage from 0-1.",
 
   "betterblockoutline.colormodifiertype.chroma": "§cCh§aro§9ma",
   "betterblockoutline.colormodifiertype.blink": "Blink",
 
-  "betterblockoutline.config.tab.blockinfo2d": "§d2D Block Information",
+  "betterblockoutline.config.tab.blockinfo": "§9Block Information Overlays",
+
+  "betterblockoutline.config.tab.blockinfo.blockinfo2d": "§d2D Block Information",
   "betterblockoutline.config.blockinfo2d.active": "Active",
   "betterblockoutline.config.blockinfo2d.info.active": "Whether or not §6information about the currently selected block§r is displayed on the block itself",
   "betterblockoutline.config.blockinfo2d.textsize": "Text Size",
@@ -63,12 +65,14 @@
   "betterblockoutline.config.blockinfo2d.backgroundcolor": "Background Color",
   "betterblockoutline.config.blockinfo2d.info.backgroundcolor": "The §6color of the background§r, in the form of #§7AA§cRR§aGG§9BB",
 
-  "betterblockoutline.blockinfo2d.noteblockinfo2d": "Noteblock Info",
-  "betterblockoutline.blockinfo2d.info.noteblockinfo2d": "Whether or not §6information about a note block§r, including the tuned note and current \ninstrument is displayed, when hovering over §6noteblocks",
+  "betterblockoutline.blockinfo2d.noteblockinfo": "Noteblock Info",
+  "betterblockoutline.blockinfo2d.info.noteblockinfo": "Whether or not §6information about a note block§r, including the tuned note and current \ninstrument is displayed, when hovering over §6noteblocks",
+  "betterblockoutline.blockinfo2d.signtext": "Sign Text",
+  "betterblockoutline.blockinfo2d.info.signtext": "Whether or not the text of a selected sign§r is displayed",
   "betterblockoutline.blockinfo2d.redstoneinfo": "Redstone Info",
   "betterblockoutline.blockinfo2d.info.redstoneinfo": "Whether or not the §6information about redstone components§r is displayed, when hovering over §6redstone redstone components",
   "betterblockoutline.blockinfo2d.facingtext": "Facing Text",
-  "betterblockoutline.blockinfo2d.info.facingtext": "Whether or not the §6direction of a block§r is displayed, when hovering over applicable blocks",
+  "betterblockoutline.blockinfo2d.info.facingtext": "Whether or not the §6direction of a block§r is displayed, when hovering over §6applicable blocks",
   "betterblockoutline.blockinfo2d.blocklevel": "Block Level",
   "betterblockoutline.blockinfo2d.info.blocklevel": "Whether or not the §6level of fillable blocks§r, is displayed \nwhen hovering over fillable blocks, such as §6cauldrons or composters",
   "betterblockoutline.blockinfo2d.waterloggedtext": "Waterlogged",
@@ -96,15 +100,35 @@
   "betterblockoutline.blockinfo2d.coordinatestext": "Block Coordinates",
   "betterblockoutline.blockinfo2d.info.coordinatestext": "Whether or not the §6the coordinates of a block§r for doors is displayed, \nwhen hovering over §6any block",
 
+  "betterblockoutline.config.tab.blockinfo.blockinfo3d": "§33D Block Information",
+  "betterblockoutline.config.tab.blockinfo.blockinfo3d.general": "§bGeneral",
+  "betterblockoutline.config.blockinfo3d.linewidth": "Line Width",
+  "betterblockoutline.config.blockinfo3d.info.linewidth": "The §6thickness§r of the lines used in the 3D overlay, in §6pixels§r",
+  "betterblockoutline.config.blockinfo3d.linecolor": "Line Color",
+  "betterblockoutline.config.blockinfo3d.info.linecolor": "The §6color of the lines§r used in the 3D overlay, in the form of #§7AA§cRR§aGG§9BB",
+  "betterblockoutline.blockinfo3d.directionarrow": "§eDirection Arrow§r",
+  "betterblockoutline.blockinfo3d.info.directionarrow": "Whether or not the §eDirection Arrow§r overlay is active",
+  "betterblockoutline.config.tab.blockinfo.blockinfo3d.directionarrow": "§eDirection Arrow",
+  "betterblockoutline.config.directionarrow.arrowtype": "Arrow Type",
+  "betterblockoutline.config.directionarrow.info.arrowtype": "The §6type of arrow used§r for the §eDirection Arrow overlay\n §9Line§r - Draws a line with a pyramidal tip\n §ePyramid§r - Draws a square pyramid",
+  "betterblockoutline.config.directionarrow.arrowtype.line": "§9Line",
+  "betterblockoutline.config.directionarrow.arrowtype.pyramid": "§ePyramid",
+
+
   "betterblockoutline.config.tab.hotkeys": "§cHotkeys",
-  "betterblockoutline.blockinfo2d.hotkeyname": "Toggle <hotkey> Hotkey",
-  "betterblockoutline.blockinfo2d.info.hotkeyname": "Whether or not <hotkey> should be rendered",
+
+  "betterblockoutline.config.tab.hotkeys.general": "§bGeneral",
   "betterblockoutline.config.hotkey.menu": "Open BetterBlockOutline §rConfig",
-  "betterblockoutline.config.hotkey.info.menu": "Hotkey to open this configuration screen",
-  "betterblockoutline.config.hotkey.toggleinfoactive": "Toggle Render Info",
-  "betterblockoutline.config.hotkey.info.toggleinfoactive": "The hotkey to toggle whether or not any §dBlock Information is rendered",
+  "betterblockoutline.config.hotkey.info.menu": "Hotkey to open §6this configuration screen",
+  "betterblockoutline.config.hotkey.toggleinfoactive": "Toggle Render Info Active",
+  "betterblockoutline.config.hotkey.info.toggleinfoactive": "The hotkey to toggle whether or not any §9Block Information§r is §6active§r, akin to §6changing the Active setting§r to false",
   "betterblockoutline.config.hotkey.disableallinfo": "Disable All Info Overlays",
-  "betterblockoutline.config.hotkey.info.disableallinfo": "The hotkey to disable any visible Info overlays",
+  "betterblockoutline.config.hotkey.info.disableallinfo": "The hotkey to disable all visible §9Block Info§r overlays, akin to §6turning off every individual §9Block Info§6 overlay off",
+
+  "betterblockoutline.config.tab.hotkeys.blockinfo2d": "§d2D Block Info Hotkeys",
+  "betterblockoutline.config.tab.hotkeys.blockinfo3d": "§33D Block Info Hotkeys",
+  "betterblockoutline.blockinfo2d.hotkeyname": "Toggle §6<hotkey>§r Hotkey",
+  "betterblockoutline.blockinfo2d.info.hotkeyname": "Whether or not §6<hotkey>§r should be rendered",
 
   "betterblockoutline.message.disableall": "All Block Information toggled §coff"
 }

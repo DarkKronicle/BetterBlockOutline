@@ -23,11 +23,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d.constructSimple;
+
+/**
+ * Renderer for {@link AbstractBlockInfo2d}
+ */
 public class BlockInfo2dRenderer implements IOverlayRenderer {
 
     private final static BlockInfo2dRenderer INSTANCE = new BlockInfo2dRenderer();
 
     private final MinecraftClient client;
+
     @Getter
     private final List<AbstractBlockInfo2d> renderers = new ArrayList<>();
 
@@ -40,26 +46,29 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
     }
 
     public void setup() {
+        // Dedicated classes
         add(new RedstoneInfo());
         add(new NoteblockInfo());
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.ALL, "coordinatestext", (block) -> true, (block) -> {
+        add(new SignText());
+
+        // Simple ones
+        add(constructSimple(AbstractBlockInfo.Order.ALL, "coordinatestext", (block) -> true, (block) -> {
             BlockPos pos = block.getBlock().getPos();
             return "X: " + pos.getX() + "\nY: " + pos.getY() + "\nZ: " + pos.getZ();
         }));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "facingtext", "Facing: %s", Properties.FACING, Properties.HOPPER_FACING, Properties.HORIZONTAL_FACING));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "blocklevel", "Level: %s", Properties.LEVEL_3, Properties.LEVEL_8));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "waterloggedtext", "Waterlogged: %s", Properties.WATERLOGGED));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "opentext", "Open: %s", Properties.OPEN));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "persistent", "Persistent: %s", Properties.PERSISTENT));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "distancetext", "Distance: %s", Properties.DISTANCE_0_7, Properties.DISTANCE_1_7));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "layerstext", "Layers: %s", Properties.LAYERS));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "dripleaftilttext", "Tilt: %s", Properties.TILT));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "chargestext", "Charges: %s", Properties.CHARGES));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "bitestext", "Bites: %s", Properties.BITES));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "agetext", "Age: %s", Properties.AGE_1, Properties.AGE_2, Properties.AGE_3, Properties.AGE_5, Properties.AGE_7, Properties.AGE_15, Properties.AGE_25));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "beetext", "Honey Level: %s", Properties.HONEY_LEVEL));
-        add(AbstractBlockInfo2d.constructSimple(AbstractBlockInfo.Order.BLOCK, "leveltext", "Level: %s", Properties.LEVEL_15));
-        add(new SignText());
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "facingtext", "Facing: %s", Properties.FACING, Properties.HOPPER_FACING, Properties.HORIZONTAL_FACING));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "blocklevel", "Level: %s", Properties.LEVEL_3, Properties.LEVEL_8));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "waterloggedtext", "Waterlogged: %s", Properties.WATERLOGGED));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "opentext", "Open: %s", Properties.OPEN));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "persistent", "Persistent: %s", Properties.PERSISTENT));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "distancetext", "Distance: %s", Properties.DISTANCE_0_7, Properties.DISTANCE_1_7));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "layerstext", "Layers: %s", Properties.LAYERS));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "dripleaftilttext", "Tilt: %s", Properties.TILT));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "chargestext", "Charges: %s", Properties.CHARGES));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "bitestext", "Bites: %s", Properties.BITES));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "agetext", "Age: %s", Properties.AGE_1, Properties.AGE_2, Properties.AGE_3, Properties.AGE_5, Properties.AGE_7, Properties.AGE_15, Properties.AGE_25));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "beetext", "Honey Level: %s", Properties.HONEY_LEVEL));
+        add(constructSimple(AbstractBlockInfo.Order.BLOCK, "leveltext", "Level: %s", Properties.LEVEL_15));
 
         // Setup order so that generic ones get rendered last
         Collections.sort(renderers);
@@ -117,6 +126,5 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
 
         vec.add(new Vector3d(0.5, 0.5, 0.5));
         AbstractBlockInfo2d.drawStringLines(matrices, client, lines, vec);
-
     }
 }

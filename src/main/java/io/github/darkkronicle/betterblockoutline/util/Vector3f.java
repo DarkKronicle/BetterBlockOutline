@@ -1,11 +1,12 @@
 package io.github.darkkronicle.betterblockoutline.util;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.math.Quaternion;
 
-@AllArgsConstructor
+/**
+ * An immutable class containing vector data in the form of floats.
+ */
 @EqualsAndHashCode
 public class Vector3f {
 
@@ -13,16 +14,24 @@ public class Vector3f {
     public final float y;
     public final float z;
 
+    public Vector3f(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public Vector3f(double x, double y, double z) {
-        this.x = (float) x;
-        this.y = (float) y;
-        this.z = (float) z;
+        this((float) x, (float) y, (float) z);
     }
 
     public Vector3f(Vector3d vector) {
         this(vector.x, vector.y, vector.z);
     }
 
+    /**
+     * Converts this vector into a {@link Vector3d}
+     * @return A {@link Vector3d} with the same data
+     */
     public Vector3d to3d() {
         return new Vector3d(this.x, this.y, this.z);
     }

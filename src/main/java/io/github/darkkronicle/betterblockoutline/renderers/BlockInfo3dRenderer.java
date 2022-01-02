@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Renderer for {@link AbstractBlockInfo3d}
+ */
 public class BlockInfo3dRenderer implements IOverlayRenderer {
 
     private final static BlockInfo3dRenderer INSTANCE = new BlockInfo3dRenderer();
@@ -39,6 +42,9 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
         Collections.sort(renderers);
     }
 
+    /**
+     * Returns all of the hotkeys used for the renderers
+     */
     public List<ConfigHotkey> getHotkeys() {
         List<ConfigHotkey> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
@@ -47,6 +53,9 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
         return keys;
     }
 
+    /**
+     * Returns all of the {@link SaveableConfig} for hotkeys
+     */
     public List<SaveableConfig<? extends IConfigBase>> getHotkeyConfigs() {
         List<SaveableConfig<? extends IConfigBase>> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
@@ -55,6 +64,10 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
         return keys;
     }
 
+    /**
+     * Returns all of the {@link SaveableConfig} for whether an info renderer is active
+     * @return
+     */
     public List<SaveableConfig<? extends IConfigBase>> getActiveConfigs() {
         List<SaveableConfig<? extends IConfigBase>> active = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {

@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.util.Color4f;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -62,8 +63,10 @@ public class ConfigScreen extends GuiConfigsBase {
 
     public static int addAllChildrenButtons(GuiBase screen, TabSupplier supplier, int x, int y) {
         int rows = 0;
-        x += 8;
         if (supplier.getChildren() != null && supplier.getChildren().size() != 0) {
+            x += 2;
+            screen.addLabel(x, y, 10, 22, new Color4f(1, 1, 1, 1).intValue, ">");
+            x += 8;
             addNestedTabButtons(screen, supplier, x, y);
             y += 22;
             rows++;

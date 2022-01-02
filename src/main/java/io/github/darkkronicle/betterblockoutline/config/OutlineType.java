@@ -4,6 +4,9 @@ import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import lombok.AllArgsConstructor;
 
+/**
+ * Type of way to render the outline of the block
+ */
 @AllArgsConstructor
 public enum OutlineType implements IConfigOptionListEntry {
     LINE("line"),

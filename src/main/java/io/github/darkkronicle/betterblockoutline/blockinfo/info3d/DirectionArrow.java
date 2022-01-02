@@ -3,7 +3,7 @@ package io.github.darkkronicle.betterblockoutline.blockinfo.info3d;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
@@ -35,7 +35,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     // TODO read files containing this?
     @AllArgsConstructor
     public enum ArrowType implements IConfigOptionListEntry {
-        LINE_ARROW("linearrow", Util.make(() -> {
+        LINE_ARROW("line", Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             lines.add(new VectorPair(new Vector3f(0, -.5f, 0), new Vector3f(0, .5f, 0)));
             lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(-.1f, .2f, 0)));
@@ -48,7 +48,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
             lines.add(new VectorPair(new Vector3f(0, .2f, .1f), new Vector3f(-.1f, .2f, 0)));
             return lines;
         })),
-        TETRAHEDRON("tetrahedron", Util.make(() -> {
+        PYRAMID("pyramid", Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             // Points inwards
             lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0f), new Vector3f(0, .4f, 0)));
@@ -75,7 +75,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
 
         @Override
         public String getDisplayName() {
-            return "betterblockoutline.config.directionarrow.arrowtype." + configValue;
+            return StringUtils.translate("betterblockoutline.config.directionarrow.arrowtype." + configValue);
         }
 
         @Override

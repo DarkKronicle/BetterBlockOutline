@@ -28,6 +28,9 @@ public class ColorUtil {
         return new Color4f(red, green, blue, 1);
     }
 
+    /**
+     * Gets alpha from a blink function
+     */
     public static float getBlink(double percent, float originalAlpha) {
         if (percent == .5) {
             percent = 1;

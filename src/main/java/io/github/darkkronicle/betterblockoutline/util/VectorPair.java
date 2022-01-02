@@ -3,6 +3,11 @@ package io.github.darkkronicle.betterblockoutline.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * A class containing two {@link Vector3f}
+ *
+ * This can compare with another {@link VectorPair} and will return equal if the vectors are the same, or flipped.
+ */
 @AllArgsConstructor
 public class VectorPair {
 

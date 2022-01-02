@@ -52,7 +52,7 @@ public class ColorModifierListScreen extends GuiListBase<ConfigColorModifier, Wi
 
         super.initGui();
         y += (22 * ConfigScreen.addTabButtons(this, 10, y));
-        y += (22 * ConfigScreen.addNestedTabButtons(this, ConfigScreen.TAB, 10, y));
+        y += (22 * ConfigScreen.addAllChildrenButtons(this, ConfigScreen.TAB, 10, y));
 
         String addModifierName = StringUtils.translate("betterblockoutline.config.button.addmodifier");
         ButtonGeneric addModifier = new ButtonGeneric(this.width - 10, y, -1, true, addModifierName);
