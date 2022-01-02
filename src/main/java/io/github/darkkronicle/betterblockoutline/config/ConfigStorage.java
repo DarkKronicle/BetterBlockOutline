@@ -10,7 +10,9 @@ import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
+import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.StringUtils;
@@ -106,13 +108,16 @@ public class ConfigStorage implements IConfigHandler {
 
         public final static String NAME = "blockinfo3d";
 
+        public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
+                new ConfigBoolean(translate("active"), false, translate("info.active")));
+
         public final static SaveableConfig<ConfigDouble> LINE_WIDTH = SaveableConfig.fromConfig("lineWidth",
                 new ConfigDouble(translate("linewidth"), 2, 0.1, 30, translate("info.linewidth")));
 
         public final static SaveableConfig<ConfigColor> LINE_COLOR = SaveableConfig.fromConfig("lineColor",
                 new ConfigColor(translate("linecolor"), "#FFAFAFAF", translate("info.linecolor")));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(LINE_WIDTH, LINE_COLOR);
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, LINE_WIDTH, LINE_COLOR);
 
     }
 
@@ -127,7 +132,14 @@ public class ConfigStorage implements IConfigHandler {
         public final static SaveableConfig<ConfigOptionList> ARROW_TYPE = SaveableConfig.fromConfig("arrowType",
                 new ConfigOptionList(translate("arrowtype"), DirectionArrow.ArrowType.LINE_ARROW, translate("info.arrowtype")));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ARROW_TYPE);
+        public final static SaveableConfig<ConfigHotkey> CYCLE_ARROW = SaveableConfig.fromConfig("cycleArrow",
+                new ConfigHotkey(translate("cyclearrow"), "", KeybindSettings.MODIFIER_INGAME, translate("info.cyclearrow")));
+
+        public final static SaveableConfig<ConfigBoolean> LOGICAL_DIRECTION = SaveableConfig.fromConfig("logicalDirection",
+                new ConfigBoolean(translate("logicaldirection"), false, translate("info.logicaldirection")));
+
+
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ARROW_TYPE, CYCLE_ARROW, LOGICAL_DIRECTION);
 
     }
 

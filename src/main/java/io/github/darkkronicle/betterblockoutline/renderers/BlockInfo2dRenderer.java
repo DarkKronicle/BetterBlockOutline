@@ -12,6 +12,7 @@ import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.SignText;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import lombok.Getter;
+import net.minecraft.block.InfestedBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
@@ -69,6 +70,7 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
         add(constructSimple(AbstractBlockInfo.Order.BLOCK, "agetext", "Age: %s", Properties.AGE_1, Properties.AGE_2, Properties.AGE_3, Properties.AGE_5, Properties.AGE_7, Properties.AGE_15, Properties.AGE_25));
         add(constructSimple(AbstractBlockInfo.Order.BLOCK, "beetext", "Honey Level: %s", Properties.HONEY_LEVEL));
         add(constructSimple(AbstractBlockInfo.Order.BLOCK, "leveltext", "Level: %s", Properties.LEVEL_15));
+        add(constructSimple(AbstractBlockInfo.Order.SPECIFIC, "infested", (block) -> block.getBlock().getState().getBlock() instanceof InfestedBlock, (block) -> "Infested"));
 
         // Setup order so that generic ones get rendered last
         Collections.sort(renderers);

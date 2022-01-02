@@ -16,8 +16,12 @@ public class HotkeyCallbacks {
     public static void setup() {
         Callbacks callback = new Callbacks();
         Hotkeys.MENU.config.getKeybind().setCallback(callback);
-        Hotkeys.DISABLE_ALL_INFO.config.getKeybind().setCallback(callback);
-        Hotkeys.TOGGLE_INFO_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo2d.ACTIVE.config));
+        Hotkeys.TOGGLE_MOD_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.General.ACTIVE.config));
+        Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind().setCallback(callback);
+        Hotkeys.TOGGLE_INFO2D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo2d.ACTIVE.config));
+        Hotkeys.DISABLE_ALL_INFO3D.config.getKeybind().setCallback(callback);
+        Hotkeys.TOGGLE_INFO3D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo3d.ACTIVE.config));
+        ConfigStorage.BlockInfoDirectionArrow.CYCLE_ARROW.config.getKeybind().setCallback(new KeyCycleOption(ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config));
         for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
             info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
         }
@@ -34,11 +38,17 @@ public class HotkeyCallbacks {
                 GuiBase.openGui(new ConfigScreen());
                 return true;
             }
-            if (key == Hotkeys.DISABLE_ALL_INFO.config.getKeybind()) {
+            if (key == Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind()) {
                 for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
                     info.getActive().config.setBooleanValue(false);
                 }
-                InfoUtils.printActionbarMessage("betterblockoutline.message.disableall");
+                InfoUtils.printActionbarMessage("betterblockoutline.message.disableall2d");
+            }
+            if (key == Hotkeys.DISABLE_ALL_INFO3D.config.getKeybind()) {
+                for (AbstractBlockInfo info : BlockInfo3dRenderer.getInstance().getRenderers()) {
+                    info.getActive().config.setBooleanValue(false);
+                }
+                InfoUtils.printActionbarMessage("betterblockoutline.message.disableall3d");
             }
             return false;
         }

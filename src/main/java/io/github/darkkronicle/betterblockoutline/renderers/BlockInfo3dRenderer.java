@@ -3,6 +3,8 @@ package io.github.darkkronicle.betterblockoutline.renderers;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
+import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.InfestedSilverfish;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.AbstractBlockInfo3d;
@@ -39,6 +41,7 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
 
     public void setup() {
         add(new DirectionArrow());
+        add(new InfestedSilverfish());
         Collections.sort(renderers);
     }
 
@@ -78,6 +81,9 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
+        if (!ConfigStorage.BlockInfo3d.ACTIVE.config.getBooleanValue()) {
+            return false;
+        }
         for (AbstractBlockInfo3d renderer : renderers) {
             if (renderer.render(matrices, camera, entity, block)) {
                 return true;

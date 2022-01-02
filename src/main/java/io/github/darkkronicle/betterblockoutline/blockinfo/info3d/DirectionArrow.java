@@ -11,7 +11,10 @@ import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import io.github.darkkronicle.betterblockoutline.util.VectorPair;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.minecraft.block.AbstractRedstoneGateBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ObserverBlock;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -35,7 +38,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     // TODO read files containing this?
     @AllArgsConstructor
     public enum ArrowType implements IConfigOptionListEntry {
-        LINE_ARROW("line", Util.make(() -> {
+        LINE_ARROW("line", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             lines.add(new VectorPair(new Vector3f(0, -.5f, 0), new Vector3f(0, .5f, 0)));
             lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(-.1f, .2f, 0)));
@@ -48,7 +51,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
             lines.add(new VectorPair(new Vector3f(0, .2f, .1f), new Vector3f(-.1f, .2f, 0)));
             return lines;
         })),
-        PYRAMID("pyramid", Util.make(() -> {
+        PYRAMID("pyramid", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             // Points inwards
             lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0f), new Vector3f(0, .4f, 0)));
@@ -61,10 +64,77 @@ public class DirectionArrow extends AbstractBlockInfo3d {
             lines.add(new VectorPair(new Vector3f(.3f, -.4f, 0), new Vector3f(0, -.4f, .3f)));
             lines.add(new VectorPair(new Vector3f(0, -.4f, .3f), new Vector3f(-.3f, -.4f, 0)));
             return lines;
+        })),
+        CHEVRON("chevron", false, Util.make(() -> {
+            List<VectorPair> lines = new ArrayList<>();
+            lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0), new Vector3f(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3f(.3f, -.4f, 0), new Vector3f(0, .4f, 0)));
+            return lines;
+        })),
+        ALL_SIDES("sides", true, Util.make(() -> {
+            List<VectorPair> lines = new ArrayList<>();
+            // -X side
+            lines.add(new VectorPair(new Vector3f(-.508f, -.5f, 0), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(-.508f, .3f, -.3f), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(-.508f, .3f, .3f), new Vector3f(-.508f, .5f, 0)));
+
+            // +X side
+            lines.add(new VectorPair(new Vector3f(.508f, -.5f, 0), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(.508f, .3f, -.3f), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(.508f, .3f, .3f), new Vector3f(.508f, .5f, 0)));
+
+            // -Z side
+            lines.add(new VectorPair(new Vector3f(0f, -.5f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3f(-.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3f(.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+
+            // +Z side
+            lines.add(new VectorPair(new Vector3f(0f, -.5f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3f(-.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3f(.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+
+            // +Y side
+            lines.add(new VectorPair(new Vector3f(-.1f, .508f, -.1f), new Vector3f(-.1f, .508f, .1f)));
+            lines.add(new VectorPair(new Vector3f(-.1f, .508f, .1f), new Vector3f(.1f, .508f, .1f)));
+            lines.add(new VectorPair(new Vector3f(.1f, .508f, .1f), new Vector3f(.1f, .508f, -.1f)));
+            lines.add(new VectorPair(new Vector3f(.1f, .508f, -.1f), new Vector3f(-.1f, .508f, -.1f)));
+
+            // -Y side
+            lines.add(new VectorPair(new Vector3f(-.3f, -.508f, -.3f), new Vector3f(-.3f, -.508f, .3f)));
+            lines.add(new VectorPair(new Vector3f(-.3f, -.508f, .3f), new Vector3f(.3f, -.508f, .3f)));
+            lines.add(new VectorPair(new Vector3f(.3f, -.508f, .3f), new Vector3f(.3f, -.508f, -.3f)));
+            lines.add(new VectorPair(new Vector3f(.3f, -.508f, -.3f), new Vector3f(-.3f, -.508f, -.3f)));
+            return lines;
+        })),
+        SIDE_ARROWS("side_arrows", true, Util.make(() -> {
+            List<VectorPair> lines = new ArrayList<>();
+
+            // -X side
+            lines.add(new VectorPair(new Vector3f(-.508f, -.5f, 0), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(-.508f, .3f, -.3f), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(-.508f, .3f, .3f), new Vector3f(-.508f, .5f, 0)));
+
+            // +X side
+            lines.add(new VectorPair(new Vector3f(.508f, -.5f, 0), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(.508f, .3f, -.3f), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3f(.508f, .3f, .3f), new Vector3f(.508f, .5f, 0)));
+
+            // -Z side
+            lines.add(new VectorPair(new Vector3f(0f, -.5f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3f(-.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3f(.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+
+            // +Z side
+            lines.add(new VectorPair(new Vector3f(0f, -.5f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3f(-.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3f(.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+            return lines;
         }))
         ;
 
         private final String configValue;
+        @Getter
+        private final boolean useDepthTest;
         @Getter
         private final List<VectorPair> vectors;
 
@@ -133,11 +203,18 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     public void renderInfo(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
         Vector3d camDif = RenderingUtil.getCameraOffset(camera, block.getBlock().getPos());
         Direction direction = getDirection(block.getBlock().getState()).get();
+
+        ArrowType arrow = (ArrowType) ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config.getOptionListValue();
+        if (ConfigStorage.BlockInfoDirectionArrow.LOGICAL_DIRECTION.config.getBooleanValue()) {
+            direction = applyLogicalDirection(direction, block);
+        }
+
+
         List<VectorPair> lines = getArrow();
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
         RenderSystem.lineWidth((float) ConfigStorage.BlockInfo3d.LINE_WIDTH.config.getDoubleValue());
-        RenderingUtil.setDepth(false);
+        RenderingUtil.setDepth(arrow.isUseDepthTest());
         RenderSystem.disableCull();
         RenderUtils.setupBlend();
         Tessellator tessellator = Tessellator.getInstance();
@@ -153,6 +230,15 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         RenderingUtil.setDepth(true);
         RenderSystem.enableCull();
 
+    }
+
+    private static Direction applyLogicalDirection(Direction direction, AbstractConnectedBlock blockData) {
+        BlockState state = blockData.getBlock().getState();
+        Block block = state.getBlock();
+        if (block instanceof AbstractRedstoneGateBlock || block instanceof ObserverBlock) {
+            return direction.getOpposite();
+        }
+        return direction;
     }
 
     private static VectorPair rotate(Direction direction, VectorPair pair) {
