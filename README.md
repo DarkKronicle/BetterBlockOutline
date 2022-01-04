@@ -1,6 +1,14 @@
 # BetterBlockOutline
 
-BetterBlockOutline is a mod designed to overhaul the block outline from Vanilla Minecraft. There are many ways to change the appearance of the outline. Outline color, width, fill color, see through, and more.
+[![Discord Badge](https://img.shields.io/discord/753693459369427044?color=000000&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/WnaE3uZxDA)
+[![Lines Link](https://img.shields.io/tokei/lines/github.com/DarkKronicle/BetterBlockOutline?color=000000&logo=GitHub&style=for-the-badge)](https://github.com/DarkKronicle/BetterBlockOutline)
+
+[![Downloads Badge](http://cf.way2muchnoise.eu/full_betterblockoutline_%E2%80%8B_downloads(4B4B4B-000000-ffffff-000000-ffffff).svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/betterblockoutline)
+[![Available Badge](http://cf.way2muchnoise.eu/versions/For%20Client_betterblockoutline_all(4B4B4B-000000-ffffff-000000).svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/betterblockoutline)
+
+
+
+BetterBlockOutline is a client sided Minecraft mod that allows for ample customization of the block outline. Everything from color customization to debug information.
 
 There are different color effects you can apply to the fill color or the outline color. Chroma, blink, and more coming!
 

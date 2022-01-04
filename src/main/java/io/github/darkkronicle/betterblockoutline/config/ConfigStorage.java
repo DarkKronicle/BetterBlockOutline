@@ -48,6 +48,9 @@ public class ConfigStorage implements IConfigHandler {
         public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
                 new ConfigBoolean(translate("active"), true, translate("info.active")));
 
+        public final static SaveableConfig<ConfigBoolean> ALWAYS_SHOW = SaveableConfig.fromConfig("alwaysShow",
+                new ConfigBoolean(translate("alwaysshow"), true, translate("info.alwaysshow")));
+
         public final static SaveableConfig<ConfigBoolean> SEE_THROUGH = SaveableConfig.fromConfig("seeThrough",
                 new ConfigBoolean(translate("seethrough"), false, translate("info.seethrough")));
 
@@ -69,7 +72,7 @@ public class ConfigStorage implements IConfigHandler {
         public final static SaveableConfig<ConfigOptionList> CONNECT_TYPE = SaveableConfig.fromConfig("connectType",
                 new ConfigOptionList(translate("connecttype"), ConnectType.SEAMLESS, translate("info.connecttype")));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE, CONNECT_TYPE);
+        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, ALWAYS_SHOW, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE, CONNECT_TYPE);
 
     }
 

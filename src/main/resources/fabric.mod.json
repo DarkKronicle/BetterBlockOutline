@@ -3,7 +3,7 @@
   "id": "betterblockoutline",
   "version": "${version}",
   "name": "BetterBlockOutline",
-  "description": "A more customizable block outline",
+  "description": "A client sided Minecraft mod that allows for ample customization of the block outline. Everything from color customization to debug information.",
   "authors": [
     "DarkKronicle"
   ],
