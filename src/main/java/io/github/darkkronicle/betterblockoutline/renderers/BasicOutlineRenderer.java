@@ -79,7 +79,8 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         RenderUtils.setupBlend(); // Alpha actually does stuff
         RenderingUtil.setDepth(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue()); // See through
         RenderSystem.disableCull();
-
+        RenderSystem.depthMask(false);
+        // Allow glass and other translucent/transparent objects to render properly
         Color4f fillColor = ConfigStorage.General.FILL_COLOR.config.getColor();
         fillColor = processColor(fillColor, ColorModifierListScreen.Type.FILL);
         if (fillColor.a > 0) {
@@ -92,6 +93,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
             drawOutlineLines(tessellator, matrices, buffer, camDif, lineColor, outline);
         }
 
+        RenderSystem.depthMask(true);
         RenderingUtil.setDepth(true);
         RenderSystem.enableCull();
     }

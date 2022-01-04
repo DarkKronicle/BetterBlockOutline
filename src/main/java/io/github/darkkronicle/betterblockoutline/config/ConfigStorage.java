@@ -49,7 +49,7 @@ public class ConfigStorage implements IConfigHandler {
                 new ConfigBoolean(translate("active"), true, translate("info.active")));
 
         public final static SaveableConfig<ConfigBoolean> ALWAYS_SHOW = SaveableConfig.fromConfig("alwaysShow",
-                new ConfigBoolean(translate("alwaysshow"), true, translate("info.alwaysshow")));
+                new ConfigBoolean(translate("alwaysshow"), false, translate("info.alwaysshow")));
 
         public final static SaveableConfig<ConfigBoolean> SEE_THROUGH = SaveableConfig.fromConfig("seeThrough",
                 new ConfigBoolean(translate("seethrough"), false, translate("info.seethrough")));
