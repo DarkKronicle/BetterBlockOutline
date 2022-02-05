@@ -10,6 +10,7 @@ import io.github.darkkronicle.betterblockoutline.config.gui.ConfigScreen;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
+import io.github.darkkronicle.betterblockoutline.renderers.PersistentOutlineRenderer;
 
 public class HotkeyCallbacks {
 
@@ -21,6 +22,8 @@ public class HotkeyCallbacks {
         Hotkeys.TOGGLE_INFO2D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo2d.ACTIVE.config));
         Hotkeys.DISABLE_ALL_INFO3D.config.getKeybind().setCallback(callback);
         Hotkeys.TOGGLE_INFO3D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo3d.ACTIVE.config));
+        Hotkeys.TOGGLE_PERSISTENT_FOR_BLOCK.config.getKeybind().setCallback(callback);
+        Hotkeys.CLEAR_PERSISTENT_BLOCKS.config.getKeybind().setCallback(callback);
         ConfigStorage.BlockInfoDirectionArrow.CYCLE_ARROW.config.getKeybind().setCallback(new KeyCycleOption(ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config));
         for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
             info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
@@ -37,8 +40,7 @@ public class HotkeyCallbacks {
             if (key == Hotkeys.MENU.config.getKeybind()) {
                 GuiBase.openGui(new ConfigScreen());
                 return true;
-            }
-            if (key == Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind()) {
+            } else if (key == Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind()) {
                 for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
                     info.getActive().config.setBooleanValue(false);
                 }
@@ -49,8 +51,19 @@ public class HotkeyCallbacks {
                     info.getActive().config.setBooleanValue(false);
                 }
                 InfoUtils.printActionbarMessage("betterblockoutline.message.disableall3d");
+            } else if (key == Hotkeys.TOGGLE_PERSISTENT_FOR_BLOCK.config.getKeybind()) {
+                if (PersistentOutlineRenderer.getInstance().toggleFromPlayer()) {
+                    InfoUtils.printActionbarMessage("betterblockoutline.message.toggleblock.success");
+                } else {
+                    InfoUtils.printActionbarMessage("betterblockoutline.message.toggleblock.failure");
+                }
+            } else if (key == Hotkeys.CLEAR_PERSISTENT_BLOCKS.config.getKeybind()) {
+                PersistentOutlineRenderer.getInstance().clear();
+                InfoUtils.printActionbarMessage("betterblockoutline.message.clearedblocks");
+            } else {
+                return false;
             }
-            return false;
+            return true;
         }
     }
 

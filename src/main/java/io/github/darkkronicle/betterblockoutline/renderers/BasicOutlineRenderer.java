@@ -12,6 +12,7 @@ import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnect
 import io.github.darkkronicle.betterblockoutline.connectedblocks.ConnectedBlockPopulator;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
+import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -38,11 +39,7 @@ import java.util.List;
 
 public class BasicOutlineRenderer implements IOverlayRenderer {
 
-    private final MinecraftClient client;
-
-    public BasicOutlineRenderer() {
-        client = MinecraftClient.getInstance();
-    }
+    public BasicOutlineRenderer() {}
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
@@ -81,14 +78,14 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         RenderSystem.disableCull();
         RenderSystem.depthMask(false);
         // Allow glass and other translucent/transparent objects to render properly
-        Color4f fillColor = ConfigStorage.General.FILL_COLOR.config.getColor();
-        fillColor = processColor(fillColor, ColorModifierListScreen.Type.FILL);
+        Color4f fillColor = ColorUtil.fromInt(ConfigStorage.General.FILL_COLOR.config.getIntegerValue());
+        fillColor = processColor(block, fillColor, ColorModifierListScreen.Type.FILL);
         if (fillColor.a > 0) {
             drawOutlineBoxes(tessellator, matrices, buffer, camDif, fillColor, outline);
         }
 
-        Color4f lineColor = ConfigStorage.General.OUTLINE_COLOR.config.getColor();
-        lineColor = processColor(lineColor, ColorModifierListScreen.Type.OUTLINE);
+        Color4f lineColor = ColorUtil.fromInt(ConfigStorage.General.OUTLINE_COLOR.config.getIntegerValue());
+        lineColor = processColor(block, lineColor, ColorModifierListScreen.Type.OUTLINE);
         if (lineColor.a > 0) {
             drawOutlineLines(tessellator, matrices, buffer, camDif, lineColor, outline);
         }
@@ -160,11 +157,11 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         tessellator.draw();
     }
 
-    public Color4f processColor(Color4f color, ColorModifierListScreen.Type type) {
+    public Color4f processColor(BlockPosState block, Color4f color, ColorModifierListScreen.Type type) {
         long ms = Util.getMeasuringTimeMs();
         for (ConfigColorModifier mod : ConfigStorage.getColorMods(type.getConfigKey())) {
             if (mod.getActive().config.getBooleanValue()) {
-                color = mod.getColorModifier().getColor(color, ms);
+                color = mod.getColorModifier().getColor(block, color, ms);
             }
         }
         return color;

@@ -50,8 +50,24 @@
   "betterblockoutline.config.blink.offset": "Blink Offset",
   "betterblockoutline.config.blink.info.offset": "Changes the §6offset of the blink cycle§r in a percentage from 0-1.",
 
+  "betterblockoutline.config.tool.onsuitable": "Tint on Suitable Tool",
+  "betterblockoutline.config.tool.info.onsuitable": "Whether the color is tinted if holding the §6correct§r tool\nIf false it will tint if holding the §6incorrect§r tool",
+  "betterblockoutline.config.tool.color": "Tint Color",
+  "betterblockoutline.config.tool.info.color": "The §6color§r of the tint, in the form of #§7AA§cRR§aGG§9BB",
+  "betterblockoutline.config.tool.percent": "Proportion of Color",
+  "betterblockoutline.config.tool.info.percent": "How much the color will be §6mixed with the regular selection box§r, from §b0§r to §b1§r\n §7§oThis value can also be thought of as percent divided by 100",
+
+  "betterblockoutline.config.tint.color": "Tint Color",
+  "betterblockoutline.config.tint.info.color": "The §6color§r of the tint, in the form of #§7AA§cRR§aGG§9BB",
+  "betterblockoutline.config.tint.percent": "Proportion of Color",
+  "betterblockoutline.config.tint.info.percent": "How much the color will be §6mixed with the regular selection box§r, from §b0§r to §b1§r\n §7§oThis value can also be thought of as percent divided by 100",
+  "betterblockoutline.config.tint.blocknameregex": "Block Name",
+  "betterblockoutline.config.tint.info.blocknameregex": "The §6RegEx§r that, if matched, will §6apply the tint§r to the block.\nAny match will cause a tint.\nInput is is ID. i.e. §7minecraft:stone",
+
   "betterblockoutline.colormodifiertype.chroma": "§cCh§aro§9ma",
   "betterblockoutline.colormodifiertype.blink": "Blink",
+  "betterblockoutline.colormodifiertype.tint": "Block Tint",
+  "betterblockoutline.colormodifiertype.tool": "Tool Tint",
 
   "betterblockoutline.config.tab.blockinfo": "§9Block Information Overlays",
 
@@ -145,6 +161,10 @@
   "betterblockoutline.config.hotkey.info.toggleinfoactive3d": "The hotkey to toggle whether or not any §33D Block Information§r is §6active§r, akin to §6changing the 3D Active setting§r to false",
   "betterblockoutline.config.hotkey.disableallinfo3d": "Disable All 3D Info Overlays",
   "betterblockoutline.config.hotkey.info.disableallinfo3d": "The hotkey to disable all visible §33D Block Info§r overlays, akin to §6turning off every individual §93D Block Info§6 overlay off",
+  "betterblockoutline.config.hotkey.togglepersistentforblock": "Toggle Persistent Outline for Block",
+  "betterblockoutline.config.hotkey.info.togglepersistentforblock": "The hotkey to toggle whether or not the §6block outline§r for the selected block is persistent,\ncausing it to §6always render the outline§r that had been selected when pressing the hotkey",
+  "betterblockoutline.config.hotkey.clearpersistentblocks": "Clear All Persistent Blocks",
+  "betterblockoutline.config.hotkey.info.clearpersistentblocks": "The hotkey to §6clear all persistent blocks§r",
 
   "betterblockoutline.config.tab.hotkeys.blockinfo2d": "§d2D Block Info Hotkeys",
   "betterblockoutline.config.tab.hotkeys.blockinfo3d": "§33D Block Info Hotkeys",
@@ -153,5 +173,8 @@
 
   "betterblockoutline.message.disableall2d": "All 2D Block Information toggled §coff",
   "betterblockoutline.message.disableall3d": "All 3D Block Information toggled §coff",
-  "betterblockoutline.message.cycleoption": "%s was set to %s"
+  "betterblockoutline.message.cycleoption": "%s was set to %s",
+  "betterblockoutline.message.clearedblocks": "§aCleared all persistent blocks",
+  "betterblockoutline.message.toggleblock.success": "§aToggled block persistence!",
+  "betterblockoutline.message.toggleblock.failure": "§cNo block to toggle persistence!"
 }

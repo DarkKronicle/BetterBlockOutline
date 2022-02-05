@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
+import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import io.github.darkkronicle.betterblockoutline.util.VectorPair;
@@ -224,7 +225,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         for (VectorPair line : lines) {
             line = rotate(direction, line);
             line = offset(line);
-            RenderingUtil.drawLine(entry, buffer, camDif, line.getVectorOne(), line.getVectorTwo(), ConfigStorage.BlockInfo3d.LINE_COLOR.config.getColor());
+            RenderingUtil.drawLine(entry, buffer, camDif, line.getVectorOne(), line.getVectorTwo(), ColorUtil.fromInt(ConfigStorage.BlockInfo3d.LINE_COLOR.config.getIntegerValue()));
         }
         tessellator.draw();
         RenderingUtil.setDepth(true);

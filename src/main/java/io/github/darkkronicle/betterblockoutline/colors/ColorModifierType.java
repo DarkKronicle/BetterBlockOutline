@@ -9,7 +9,9 @@ import java.util.function.Supplier;
 
 public enum ColorModifierType implements IConfigOptionListEntry {
     CHROMA("chroma", ChromaColorModifier::new),
-    BLINK("blink", BlinkColorModifier::new)
+    BLINK("blink", BlinkColorModifier::new),
+    TINT("tint", BlockTintModifier::new),
+    TOOL("tool", ToolColorModifier::new)
     ;
 
     private final String value;

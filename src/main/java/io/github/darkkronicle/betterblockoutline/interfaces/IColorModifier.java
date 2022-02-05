@@ -3,6 +3,7 @@ package io.github.darkkronicle.betterblockoutline.interfaces;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.util.Color4f;
 import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
+import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +15,15 @@ public interface IColorModifier extends Comparable<IColorModifier> {
 
     /**
      * Modifies an input color and returns a new one.
+     * @param block Block for the color
      * @param original Original color that was being used
      * @param ms Measuring time in milliseconds
      * @return A new color to render. This can be passed into other modifiers.
      */
-    Color4f getColor(Color4f original, long ms);
+    Color4f getColor(BlockPosState block, Color4f original, long ms);
 
     /**
-     * Strips down the {@link SaveableConfig}'s into the base elemtn of {@link IConfigBase}.
+     * Strips down the {@link SaveableConfig}'s into the base element of {@link IConfigBase}.
      */
     default List<IConfigBase> getOptions() {
         List<IConfigBase> configs = new ArrayList<>();

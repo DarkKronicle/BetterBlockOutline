@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.util.Color4f;
 import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
+import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ChromaColorModifier implements IColorModifier {
             new ConfigDouble(translate("offset"), 0, 0, 1, translate("info.offset")));
 
     @Override
-    public Color4f getColor(Color4f original, long ms) {
+    public Color4f getColor(BlockPosState block, Color4f original, long ms) {
         double loopTime = duration.config.getDoubleValue() * 1000;
         double percent = ((ms % loopTime) / loopTime + offset.config.getDoubleValue()) % 1;
         Color4f rgb = ColorUtil.getRainbow(percent);

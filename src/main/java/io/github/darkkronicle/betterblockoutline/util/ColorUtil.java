@@ -42,4 +42,14 @@ public class ColorUtil {
         float easePercent = (float) (-(Math.cos(Math.PI * percent) - 1) / 2);
         return easePercent * originalAlpha;
     }
+
+    // https://github.com/maruohon/malilib/issues/71
+    public Color4f fromInt(int color) {
+        float a = ((color & 0xFF000000) >>> 24) / 255f;
+        float r = ((color & 0x00FF0000) >>> 16) / 255f;
+        float g = ((color & 0x000FF000) >>>  8) / 255f;
+        float b = ((color & 0x000000FF)       ) / 255f;
+
+        return new Color4f(r, g, b, a);
+    }
 }

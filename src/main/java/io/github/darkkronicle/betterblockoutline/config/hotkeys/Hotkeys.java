@@ -32,10 +32,16 @@ public class Hotkeys {
     public final static SaveableConfig<ConfigHotkey> DISABLE_ALL_INFO3D = SaveableConfig.fromConfig("disableAllInfo3d",
             new ConfigHotkey("betterblockoutline.config.hotkey.disableallinfo3d", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.disableallinfo3d"));
 
+    public final static SaveableConfig<ConfigHotkey> TOGGLE_PERSISTENT_FOR_BLOCK = SaveableConfig.fromConfig("togglePersistentForBlock",
+            new ConfigHotkey("betterblockoutline.config.hotkey.togglepersistentforblock", "M", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.togglepersistentforblock"));
 
-    public final static ImmutableList<SaveableConfig<ConfigHotkey>> KEYS = ImmutableList.of(MENU, TOGGLE_MOD_ACTIVE, TOGGLE_INFO2D_ACTIVE, DISABLE_ALL_INFO2D, TOGGLE_INFO3D_ACTIVE, DISABLE_ALL_INFO3D);
+    public final static SaveableConfig<ConfigHotkey> CLEAR_PERSISTENT_BLOCKS = SaveableConfig.fromConfig("clearPersistentBlocks",
+            new ConfigHotkey("betterblockoutline.config.hotkey.clearpersistentblocks", "N", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.config.hotkey.info.clearpersistentblocks"));
 
-    public final static ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(MENU, TOGGLE_MOD_ACTIVE, TOGGLE_INFO2D_ACTIVE, DISABLE_ALL_INFO2D, TOGGLE_INFO3D_ACTIVE, DISABLE_ALL_INFO3D);
+
+    public final static ImmutableList<SaveableConfig<ConfigHotkey>> KEYS = ImmutableList.of(MENU, TOGGLE_MOD_ACTIVE, TOGGLE_INFO2D_ACTIVE, DISABLE_ALL_INFO2D, TOGGLE_INFO3D_ACTIVE, DISABLE_ALL_INFO3D, TOGGLE_PERSISTENT_FOR_BLOCK, CLEAR_PERSISTENT_BLOCKS);
+
+    public final static ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(MENU, TOGGLE_MOD_ACTIVE, TOGGLE_INFO2D_ACTIVE, DISABLE_ALL_INFO2D, TOGGLE_INFO3D_ACTIVE, DISABLE_ALL_INFO3D, TOGGLE_PERSISTENT_FOR_BLOCK, CLEAR_PERSISTENT_BLOCKS);
 
     public final static ImmutableList<ConfigHotkey> RAW_KEYBINDS = Util.make(() -> {
         List<ConfigHotkey> keys = new ArrayList<>();
