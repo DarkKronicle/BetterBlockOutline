@@ -1,22 +1,16 @@
 package io.github.darkkronicle.betterblockoutline.renderers;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.Color4f;
+import io.github.darkkronicle.betterblockoutline.colors.ColorModifierContext;
 import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.ConnectType;
 import io.github.darkkronicle.betterblockoutline.config.OutlineType;
-import io.github.darkkronicle.betterblockoutline.config.gui.ColorModifierListScreen;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
-import io.github.darkkronicle.betterblockoutline.connectedblocks.ConnectedBlockPopulator;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
-import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.client.MinecraftClient;
+import io.github.darkkronicle.darkkore.util.Color;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -26,7 +20,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
@@ -34,16 +27,13 @@ import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import net.minecraft.util.shape.VoxelShapes;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BasicOutlineRenderer implements IOverlayRenderer {
 
     public BasicOutlineRenderer() {}
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
-        ConnectType type = (ConnectType) ConfigStorage.General.CONNECT_TYPE.config.getOptionListValue();
+        ConnectType type = ConfigStorage.getGeneral().getConnectType().getValue();
         if (type == ConnectType.NONE || type == ConnectType.BLOCKS || block.getChildren().size() == 0) {
             renderShape(matrices, camera, entity, block.getBlock(), block.getShape());
             if (type == ConnectType.BLOCKS) {
@@ -73,20 +63,21 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
 
         // Setup rendering
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderUtils.setupBlend(); // Alpha actually does stuff
-        RenderingUtil.setDepth(!ConfigStorage.General.SEE_THROUGH.config.getBooleanValue()); // See through
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+        RenderingUtil.setDepth(!ConfigStorage.getGeneral().getSeeThrough().getValue()); // See through
         RenderSystem.disableCull();
         RenderSystem.depthMask(false);
         // Allow glass and other translucent/transparent objects to render properly
-        Color4f fillColor = ColorUtil.fromInt(ConfigStorage.General.FILL_COLOR.config.getIntegerValue());
-        fillColor = processColor(block, fillColor, ColorModifierListScreen.Type.FILL);
-        if (fillColor.a > 0) {
+        Color fillColor = ConfigStorage.getGeneral().getFillColor().getValue();
+        fillColor = processColor(block, fillColor, ColorModifierContext.FILL);
+        if (fillColor.alpha() > 0) {
             drawOutlineBoxes(tessellator, matrices, buffer, camDif, fillColor, outline);
         }
 
-        Color4f lineColor = ColorUtil.fromInt(ConfigStorage.General.OUTLINE_COLOR.config.getIntegerValue());
-        lineColor = processColor(block, lineColor, ColorModifierListScreen.Type.OUTLINE);
-        if (lineColor.a > 0) {
+        Color lineColor = ConfigStorage.getGeneral().getOutlineColor().getValue();
+        lineColor = processColor(block, lineColor, ColorModifierContext.OUTLINE);
+        if (lineColor.alpha() > 0) {
             drawOutlineLines(tessellator, matrices, buffer, camDif, lineColor, outline);
         }
 
@@ -98,7 +89,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     /**
      * Draws boxes for an outline. Depth and blending should be set before this is called.
      */
-    private void drawOutlineBoxes(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
+    private void drawOutlineBoxes(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color color, VoxelShape outline) {
         MatrixStack.Entry entry = matrices.peek();
 
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -120,12 +111,12 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
      *  Renders an outline and checks for {@link OutlineType}. Will be handled correctly. Sets shader and smooth lines.
      *  Before calling blend and depth should be set
      */
-    private void drawOutlineLines(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
+    private void drawOutlineLines(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color color, VoxelShape outline) {
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
-        RenderSystem.lineWidth((float) ConfigStorage.General.OUTLINE_WIDTH.config.getDoubleValue());
+        RenderSystem.lineWidth((float) ConfigStorage.getGeneral().getOutlineWidth().getValue().doubleValue());
 
-        OutlineType type = (OutlineType) ConfigStorage.General.OUTLINE_TYPE.config.getOptionListValue();
+        OutlineType type = ConfigStorage.getGeneral().getOutlineType().getValue();
         if (type == OutlineType.LINE) {
             buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
         } else if (type == OutlineType.STRIP) {
@@ -143,7 +134,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     /**
      *  Draws an outline. Setup should be done before this method is called.
      */
-    private void drawOutlineLine(Tessellator tessellator, MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Color4f color, VoxelShape outline) {
+    private void drawOutlineLine(Tessellator tessellator, MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Color color, VoxelShape outline) {
         outline.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
             // Fix Z fighting
             minX -= .001;
@@ -157,10 +148,10 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         tessellator.draw();
     }
 
-    public Color4f processColor(BlockPosState block, Color4f color, ColorModifierListScreen.Type type) {
+    public Color processColor(BlockPosState block, Color color, ColorModifierContext type) {
         long ms = Util.getMeasuringTimeMs();
-        for (ConfigColorModifier mod : ConfigStorage.getColorMods(type.getConfigKey())) {
-            if (mod.getActive().config.getBooleanValue()) {
+        for (ConfigColorModifier<?> mod : ConfigStorage.getInstance().getColorMods(type.getConfigValue())) {
+            if (mod.getActive().getValue()) {
                 color = mod.getColorModifier().getColor(block, color, ms);
             }
         }

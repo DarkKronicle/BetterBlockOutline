@@ -1,17 +1,17 @@
 package io.github.darkkronicle.betterblockoutline.blockinfo;
 
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import fi.dy.masa.malilib.util.StringUtils;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.config.hotkeys.HotkeyCustomName;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
+import io.github.darkkronicle.darkkore.config.options.BooleanOption;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
+import io.github.darkkronicle.darkkore.intialization.profiles.PlayerContextCheck;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class AbstractBlockInfo implements Comparable<AbstractBlockInfo> {
 
@@ -47,16 +47,16 @@ public abstract class AbstractBlockInfo implements Comparable<AbstractBlockInfo>
     }
 
     /**
-     * {@link SaveableConfig} for a {@link ConfigBoolean} that shows if the renderer is active.
+     * {@link SaveableConfig} for a {@link BooleanOption} that shows if the renderer is active.
      */
     @Getter
-    private final SaveableConfig<ConfigBoolean> active;
+    private final BooleanOption active;
 
     /**
-     * {@link SaveableConfig} for a {@link ConfigHotkey} that will toggle the renderer active.
+     * {@link SaveableConfig} for a {@link HotkeySettingsOption} that will toggle the renderer active.
      */
     @Getter
-    private final SaveableConfig<ConfigHotkey> activeKey;
+    private final HotkeySettingsOption activeKey;
 
     @Getter
     private final Order order;
@@ -70,8 +70,11 @@ public abstract class AbstractBlockInfo implements Comparable<AbstractBlockInfo>
      */
     public AbstractBlockInfo(Order order, String name, String translationName, String translationHover) {
         this.order = order;
-        active = SaveableConfig.fromConfig(name, new ConfigBoolean(StringUtils.translate(translationName), false, StringUtils.translate(translationHover)));
-        activeKey = SaveableConfig.fromConfig(name, new HotkeyCustomName("betterblockoutline.blockinfo2d.hotkeyname", "", KeybindSettings.MODIFIER_INGAME, "betterblockoutline.blockinfo2d.info.hotkeyname", translationName));
+        active = new BooleanOption(name, translationName, translationHover, false);
+        activeKey = new HotkeyCustomName(
+                name, "betterblockoutline.blockinfo2d.hotkeyname", "betterblockoutline.blockinfo2d.info.hotkeyname",
+                new HotkeySettings(false, false, false, List.of(), PlayerContextCheck.getDefault())
+        );
     }
 
     /**
@@ -88,7 +91,7 @@ public abstract class AbstractBlockInfo implements Comparable<AbstractBlockInfo>
      * @return Active
      */
     public boolean isActive() {
-        return active.config.getBooleanValue();
+        return active.getValue();
     }
 
     @Override

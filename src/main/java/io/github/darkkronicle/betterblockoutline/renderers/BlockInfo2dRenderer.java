@@ -1,9 +1,6 @@
 package io.github.darkkronicle.betterblockoutline.renderers;
 
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.NoteblockInfo;
@@ -11,6 +8,10 @@ import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.RedstoneInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.SignText;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
+import io.github.darkkronicle.darkkore.config.options.BooleanOption;
+import io.github.darkkronicle.darkkore.config.options.Option;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
 import lombok.Getter;
 import net.minecraft.block.InfestedBlock;
 import net.minecraft.client.MinecraftClient;
@@ -76,24 +77,24 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
         Collections.sort(renderers);
     }
 
-    public List<ConfigHotkey> getHotkeys() {
-        List<ConfigHotkey> keys = new ArrayList<>();
+    public List<HotkeySettings> getHotkeys() {
+        List<HotkeySettings> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
-            keys.add(info.getActiveKey().config);
+            keys.add(info.getActiveKey().getValue());
         }
         return keys;
     }
 
-    public List<SaveableConfig<? extends IConfigBase>> getHotkeyConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> keys = new ArrayList<>();
+    public List<HotkeySettingsOption> getHotkeyConfigs() {
+        List<HotkeySettingsOption> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
             keys.add(info.getActiveKey());
         }
         return keys;
     }
 
-    public List<SaveableConfig<? extends IConfigBase>> getActiveConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> active = new ArrayList<>();
+    public List<BooleanOption> getActiveConfigs() {
+        List<BooleanOption> active = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
             active.add(info.getActive());
         }
@@ -106,7 +107,7 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
-        if (!ConfigStorage.BlockInfo2d.ACTIVE.config.getBooleanValue()) {
+        if (!ConfigStorage.getBlockInfo2d().getActive().getValue()) {
             return false;
         }
         renderTextInfo(renderers, client, matrices, block);

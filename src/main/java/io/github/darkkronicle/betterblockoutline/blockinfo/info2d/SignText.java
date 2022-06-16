@@ -5,7 +5,7 @@ import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class SignText extends AbstractBlockInfo2d {
         for (int i = 0; i < 4; i++) {
             Text line = sign.getTextOnRow(i, true);
             String string = line.getString();
-            if (line != LiteralText.EMPTY && string.length() > 0) {
+            if (line.getContent() != LiteralTextContent.EMPTY && string.length() > 0) {
                 lines.add(string);
             }
         }

@@ -1,14 +1,15 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 /**
  * Type of way to connect blocks rendered over.;
  */
 @AllArgsConstructor
-public enum ConnectType implements IConfigOptionListEntry {
+public enum ConnectType implements OptionListEntry<ConnectType> {
     NONE("none"),
     BLOCKS("blocks"),
     SEAMLESS("seamless")
@@ -17,33 +18,22 @@ public enum ConnectType implements IConfigOptionListEntry {
     private final String configValue;
 
     @Override
-    public String getStringValue() {
+    public List<ConnectType> getAll() {
+        return List.of(values());
+    }
+
+    @Override
+    public String getSaveKey() {
         return configValue;
     }
 
     @Override
-    public String getDisplayName() {
-        return StringUtils.translate("betterblockoutline.config.connecttype." + configValue);
+    public String getDisplayKey() {
+        return "betterblockoutline.config.connecttype." + configValue;
     }
 
     @Override
-    public ConnectType cycle(boolean forward) {
-        int index = ordinal();
-        if (forward) {
-            index++;
-        } else {
-            index--;
-        }
-        return values()[index % values().length];
-    }
-
-    @Override
-    public ConnectType fromString(String value) {
-        for (ConnectType type : values()) {
-            if (type.getStringValue().equals(value)) {
-                return type;
-            }
-        }
-        return NONE;
+    public String getInfoKey() {
+        return "betterblockoutline.config.connecttype.info." + configValue;
     }
 }

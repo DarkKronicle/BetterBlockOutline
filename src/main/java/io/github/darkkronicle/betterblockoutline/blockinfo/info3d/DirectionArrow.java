@@ -1,15 +1,13 @@
 package io.github.darkkronicle.betterblockoutline.blockinfo.info3d;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
-import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import io.github.darkkronicle.betterblockoutline.util.VectorPair;
+import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.block.AbstractRedstoneGateBlock;
@@ -38,7 +36,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
 
     // TODO read files containing this?
     @AllArgsConstructor
-    public enum ArrowType implements IConfigOptionListEntry {
+    public enum ArrowType implements OptionListEntry<ArrowType> {
         LINE_ARROW("line", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             lines.add(new VectorPair(new Vector3f(0, -.5f, 0), new Vector3f(0, .5f, 0)));
@@ -140,34 +138,23 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         private final List<VectorPair> vectors;
 
         @Override
-        public String getStringValue() {
+        public List<ArrowType> getAll() {
+            return List.of(values());
+        }
+
+        @Override
+        public String getSaveKey() {
             return configValue;
         }
 
         @Override
-        public String getDisplayName() {
-            return StringUtils.translate("betterblockoutline.config.directionarrow.arrowtype." + configValue);
+        public String getDisplayKey() {
+            return "betterblockoutline.config.directionarrow.arrowtype." + configValue;
         }
 
         @Override
-        public ArrowType cycle(boolean forward) {
-            int index = ordinal();
-            if (forward) {
-                index++;
-            } else {
-                index--;
-            }
-            return values()[index % values().length];
-        }
-
-        @Override
-        public ArrowType fromString(String value) {
-            for (ArrowType type : values()) {
-                if (type.getStringValue().equals(value)) {
-                    return type;
-                }
-            }
-            return LINE_ARROW;
+        public String getInfoKey() {
+            return "betterblockoutline.config.directionarrow.arrowtype.info." + configValue;
         }
     }
 
@@ -197,7 +184,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     }
 
     public static List<VectorPair> getArrow() {
-        return ((ArrowType) ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config.getOptionListValue()).getVectors();
+        return ConfigStorage.getBlockInfoArrow().getArrowType().getValue().getVectors();
     }
 
     @Override
@@ -205,8 +192,8 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         Vector3d camDif = RenderingUtil.getCameraOffset(camera, block.getBlock().getPos());
         Direction direction = getDirection(block.getBlock().getState()).get();
 
-        ArrowType arrow = (ArrowType) ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config.getOptionListValue();
-        if (ConfigStorage.BlockInfoDirectionArrow.LOGICAL_DIRECTION.config.getBooleanValue()) {
+        ArrowType arrow = ConfigStorage.getBlockInfoArrow().getArrowType().getValue();
+        if (ConfigStorage.getBlockInfoArrow().getLogicalDirection().getValue()) {
             direction = applyLogicalDirection(direction, block);
         }
 
@@ -214,10 +201,11 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         List<VectorPair> lines = getArrow();
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
-        RenderSystem.lineWidth((float) ConfigStorage.BlockInfo3d.LINE_WIDTH.config.getDoubleValue());
+        RenderSystem.lineWidth((float) ConfigStorage.getBlockInfo3d().getLineWidth().getValue().doubleValue());
         RenderingUtil.setDepth(arrow.isUseDepthTest());
         RenderSystem.disableCull();
-        RenderUtils.setupBlend();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(VertexFormat.DrawMode.LINES, VertexFormats.LINES);
@@ -225,7 +213,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
         for (VectorPair line : lines) {
             line = rotate(direction, line);
             line = offset(line);
-            RenderingUtil.drawLine(entry, buffer, camDif, line.getVectorOne(), line.getVectorTwo(), ColorUtil.fromInt(ConfigStorage.BlockInfo3d.LINE_COLOR.config.getIntegerValue()));
+            RenderingUtil.drawLine(entry, buffer, camDif, line.getVectorOne(), line.getVectorTwo(), ConfigStorage.getBlockInfo3d().getLineColor().getValue());
         }
         tessellator.draw();
         RenderingUtil.setDepth(true);

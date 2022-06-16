@@ -1,50 +1,42 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
-import io.github.darkkronicle.betterblockoutline.interfaces.IJsonSaveable;
+import io.github.darkkronicle.darkkore.config.impl.ConfigObject;
+import io.github.darkkronicle.darkkore.config.options.BasicOption;
+import io.github.darkkronicle.darkkore.config.options.BooleanOption;
+import io.github.darkkronicle.darkkore.config.options.Option;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class ConfigColorModifier implements IJsonSaveable, Comparable<ConfigColorModifier> {
+public class ConfigColorModifier<T extends IColorModifier> extends BasicOption<T> implements Comparable<ConfigColorModifier<?>> {
 
     @Getter
-    private final SaveableConfig<ConfigBoolean> active = SaveableConfig.fromConfig("active",
-            new ConfigBoolean("betterblockoutline.colormodifier.active", true, "betterblockoutline.colormodifier.info.active"));
+    private final BooleanOption active = new BooleanOption("active",
+            "betterblockoutline.colormodifier.active", "betterblockoutline.colormodifier.info.active", true);
     @Getter
     private ColorModifierType type;
     @Getter
-    private IColorModifier colorModifier;
+    private T colorModifier;
     private String id;
 
     public ConfigColorModifier(ColorModifierType type) {
+        super("colorConfig", type.getDisplayKey(), type.getInfoKey(), null);
         this.type = type;
-        this.colorModifier = this.type.getColorModifier().get();
+        this.colorModifier = (T) this.type.getColorModifier().get();
         // Generate random string to make it hard to confuse
-        this.id = UUID.randomUUID().toString().substring(0, 7) + "-" + this.type.getStringValue();
+        this.id = UUID.randomUUID().toString().substring(0, 7) + "-" + this.type.getSaveKey();
     }
 
-    public List<SaveableConfig<? extends IConfigBase>> getSaveableConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> configs = new ArrayList<>();
+    public List<Option<?>> getOptions() {
+        List<Option<?>> configs = new ArrayList<>();
         configs.add(active);
-        configs.addAll(colorModifier.getSaveableConfigs());
-        return configs;
-    }
-
-    public List<IConfigBase> getOptions() {
-        List<IConfigBase> configs = new ArrayList<>();
-        for (SaveableConfig<? extends IConfigBase> config : getSaveableConfigs()) {
-            configs.add(config.config);
-        }
+        configs.addAll(colorModifier.getOptions());
         return configs;
     }
 
@@ -57,28 +49,24 @@ public class ConfigColorModifier implements IJsonSaveable, Comparable<ConfigColo
     }
 
     @Override
-    public JsonObject save() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("name", this.id);
-        for (SaveableConfig<?> config : getSaveableConfigs()) {
-            obj.add(config.key, config.config.getAsJsonElement());
+    public void save(ConfigObject config) {
+        ConfigObject nest = config.createNew();
+        for (Option<?> option : getOptions()) {
+            option.save(nest);
         }
-        return obj;
+        nest.set("type", type.getSaveKey());
+        config.set(key, nest);
     }
 
     @Override
-    public void load(JsonElement element) {
-        if (!element.isJsonObject()) {
+    public void load(ConfigObject config) {
+        Optional<ConfigObject> nest = config.getOptional(key);
+        if (nest.isEmpty()) {
             return;
         }
-        JsonObject obj = element.getAsJsonObject();
-        if (obj.has("name")) {
-            this.id = obj.get("name").getAsString();
-        }
-        for (SaveableConfig<?> config : getSaveableConfigs()) {
-            if (obj.has(config.key)) {
-                config.config.setValueFromJsonElement(obj.get(config.key));
-            }
+        ConfigObject obj = nest.get();
+        for (Option<?> option : getOptions()) {
+            option.load(obj);
         }
     }
 

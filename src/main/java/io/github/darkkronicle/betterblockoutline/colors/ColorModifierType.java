@@ -1,13 +1,13 @@
 package io.github.darkkronicle.betterblockoutline.colors;
 
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
+import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.function.Supplier;
 
-public enum ColorModifierType implements IConfigOptionListEntry {
+public enum ColorModifierType implements OptionListEntry<ColorModifierType> {
     CHROMA("chroma", ChromaColorModifier::new),
     BLINK("blink", BlinkColorModifier::new),
     TINT("tint", BlockTintModifier::new),
@@ -24,33 +24,22 @@ public enum ColorModifierType implements IConfigOptionListEntry {
     }
 
     @Override
-    public String getStringValue() {
+    public List<ColorModifierType> getAll() {
+        return List.of(values());
+    }
+
+    @Override
+    public String getSaveKey() {
         return value;
     }
 
     @Override
-    public String getDisplayName() {
-        return StringUtils.translate("betterblockoutline.colormodifiertype." + value);
+    public String getDisplayKey() {
+        return "betterblockoutline.colormodifiertype." + value;
     }
 
     @Override
-    public ColorModifierType cycle(boolean forward) {
-        int index = ordinal();
-        if (forward) {
-            index++;
-        } else {
-            index--;
-        }
-        return values()[index % values().length];
-    }
-
-    @Override
-    public ColorModifierType fromString(String value) {
-        for (ColorModifierType type : values()) {
-            if (type.getStringValue().equals(value)) {
-                return type;
-            }
-        }
-        return CHROMA;
+    public String getInfoKey() {
+        return "betterblockoutline.colormodifiertype.info." + value;
     }
 }

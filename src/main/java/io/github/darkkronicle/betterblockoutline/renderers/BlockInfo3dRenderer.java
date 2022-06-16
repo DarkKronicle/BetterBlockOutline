@@ -1,15 +1,15 @@
 package io.github.darkkronicle.betterblockoutline.renderers;
 
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.InfestedSilverfish;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.AbstractBlockInfo3d;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.DirectionArrow;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
+import io.github.darkkronicle.darkkore.config.options.BooleanOption;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
 import lombok.Getter;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
@@ -45,34 +45,24 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
         Collections.sort(renderers);
     }
 
-    /**
-     * Returns all of the hotkeys used for the renderers
-     */
-    public List<ConfigHotkey> getHotkeys() {
-        List<ConfigHotkey> keys = new ArrayList<>();
+    public List<HotkeySettings> getHotkeys() {
+        List<HotkeySettings> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
-            keys.add(info.getActiveKey().config);
+            keys.add(info.getActiveKey().getValue());
         }
         return keys;
     }
 
-    /**
-     * Returns all of the {@link SaveableConfig} for hotkeys
-     */
-    public List<SaveableConfig<? extends IConfigBase>> getHotkeyConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> keys = new ArrayList<>();
+    public List<HotkeySettingsOption> getHotkeyConfigs() {
+        List<HotkeySettingsOption> keys = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
             keys.add(info.getActiveKey());
         }
         return keys;
     }
 
-    /**
-     * Returns all of the {@link SaveableConfig} for whether an info renderer is active
-     * @return
-     */
-    public List<SaveableConfig<? extends IConfigBase>> getActiveConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> active = new ArrayList<>();
+    public List<BooleanOption> getActiveConfigs() {
+        List<BooleanOption> active = new ArrayList<>();
         for (AbstractBlockInfo info : getRenderers()) {
             active.add(info.getActive());
         }
@@ -81,7 +71,7 @@ public class BlockInfo3dRenderer implements IOverlayRenderer {
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
-        if (!ConfigStorage.BlockInfo3d.ACTIVE.config.getBooleanValue()) {
+        if (!ConfigStorage.getBlockInfo3d().getActive().getValue()) {
             return false;
         }
         for (AbstractBlockInfo3d renderer : renderers) {

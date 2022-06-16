@@ -1,7 +1,7 @@
 package io.github.darkkronicle.betterblockoutline.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import fi.dy.masa.malilib.util.Color4f;
+import io.github.darkkronicle.darkkore.util.Color;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Matrix4f;
 @UtilityClass
 public class RenderingUtil {
 
-    public void drawBox(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d cameraOffset, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Color4f color) {
+    public void drawBox(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d cameraOffset, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Color color) {
         minX = minX + (float) cameraOffset.x;
         minY = minY + (float) cameraOffset.y;
         minZ = minZ + (float) cameraOffset.z;
@@ -26,42 +26,46 @@ public class RenderingUtil {
         maxZ = maxZ + (float) cameraOffset.z;
 
         Matrix4f position = entry.getPositionMatrix();
+        float r = color.red() / 255f;
+        float g = color.green() / 255f;
+        float b = color.blue() / 255f;
+        float a = color.alpha() / 255f;
 
         // West
-        buffer.vertex(position, minX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, minX, minY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, maxY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, maxY, minZ).color(r, g, b, a).next();
 
         // East
-        buffer.vertex(position, maxX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, maxX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, minY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, maxZ).color(r, g, b, a).next();
 
         // North
-        buffer.vertex(position, maxX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, maxX, minY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, minY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, maxY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, minZ).color(r, g, b, a).next();
 
         // South
-        buffer.vertex(position, minX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, minX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, maxY, maxZ).color(r, g, b, a).next();
 
         // Top
-        buffer.vertex(position, minX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, maxY, minZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, minX, maxY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, maxY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, maxY, minZ).color(r, g, b, a).next();
 
         // Bottom
-        buffer.vertex(position, maxX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, minY, maxZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, minX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
-        buffer.vertex(position, maxX, minY, minZ).color(color.r, color.g, color.b, color.a).next();
+        buffer.vertex(position, maxX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, minY, maxZ).color(r, g, b, a).next();
+        buffer.vertex(position, minX, minY, minZ).color(r, g, b, a).next();
+        buffer.vertex(position, maxX, minY, minZ).color(r, g, b, a).next();
     }
 
     public void setDepth(boolean depth) {
@@ -113,7 +117,7 @@ public class RenderingUtil {
      * @param end Ending point
      * @param color Color to render
      */
-    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Vector3f start, Vector3f end, Color4f color) {
+    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Vector3f start, Vector3f end, Color color) {
         Vector3f startRaw = new Vector3f(start.x + camDif.x, start.y + camDif.y, start.z + camDif.z);
         Vector3f endRaw = new Vector3f(end.x + camDif.x, end.y + camDif.y, end.z + camDif.z);
         drawLine(entry, buffer, startRaw, endRaw, color);
@@ -127,39 +131,43 @@ public class RenderingUtil {
      * @param end Ending point
      * @param color Color to render
      */
-    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3f start, Vector3f end, Color4f color) {
+    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3f start, Vector3f end, Color color) {
         Vector3f normal = RenderingUtil.getNormalAngle(start, end);
+        float r = color.red() / 255f;
+        float g = color.green() / 255f;
+        float b = color.blue() / 255f;
+        float a = color.alpha() / 255f;
 
         buffer.vertex(
                 entry.getPositionMatrix(), start.x, start.y, start.z
-        ).color(color.r, color.g, color.b, color.a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
+        ).color(r, g, b, a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
 
         buffer.vertex(
                 entry.getPositionMatrix(), end.x, end.y, end.z
-        ).color(color.r, color.g, color.b, color.a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
+        ).color(r, g, b, a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
     }
 
     public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position) {
-        drawString(matrices, renderer, string, camera, position, new Color4f(1, 1, 1, 1));
+        drawString(matrices, renderer, string, camera, position, new Color(255, 255, 255, 255));
     }
 
-    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, Color4f textColor) {
+    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, Color textColor) {
         drawString(matrices, renderer, string, camera, position, 0.02f, false, textColor);
     }
 
-    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, float size, boolean depth, Color4f textColor) {
-        drawString(matrices, renderer, string, camera, position, size, 10, depth, textColor, new Color4f(0, 0, 0, 0));
+    public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position, float size, boolean depth, Color textColor) {
+        drawString(matrices, renderer, string, camera, position, size, 10, depth, textColor, new Color(0, 0, 0, 0));
     }
 
-    public void drawString(MatrixStack matrices, TextRenderer textRenderer, String string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
+    public void drawString(MatrixStack matrices, TextRenderer textRenderer, String string, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color textColor, Color backgroundColor) {
         drawStringLines(matrices, textRenderer, new String[]{string}, camera, position, size, lineHeight, depth, textColor, backgroundColor);
     }
 
-    public void drawStringLines(MatrixStack matrices, TextRenderer renderer, String[] lines, Camera camera, Vector3d position, float size, boolean depth, Color4f textColor) {
-        drawStringLines(matrices, renderer, lines, camera, position, size, 10, depth, textColor, new Color4f(0, 0, 0, 0));
+    public void drawStringLines(MatrixStack matrices, TextRenderer renderer, String[] lines, Camera camera, Vector3d position, float size, boolean depth, Color textColor) {
+        drawStringLines(matrices, renderer, lines, camera, position, size, 10, depth, textColor, new Color(0, 0, 0, 0));
     }
 
-    public void drawStringLines(MatrixStack matrices, TextRenderer textRenderer, String[] lines, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color4f textColor, Color4f backgroundColor) {
+    public void drawStringLines(MatrixStack matrices, TextRenderer textRenderer, String[] lines, Camera camera, Vector3d position, float size, float lineHeight, boolean depth, Color textColor, Color backgroundColor) {
         matrices.push();
         matrices.translate(position.x - camera.getPos().x, position.y - camera.getPos().y + 0.07f, position.z - camera.getPos().z);
         matrices.multiply(camera.getRotation());
@@ -171,7 +179,7 @@ public class RenderingUtil {
         matrices.translate(0, -yOffset, 0);
         for (String line : lines) {
             float xOffset = -1 * (textRenderer.getWidth(line) / 2.0f);
-            textRenderer.draw(line, xOffset, 0.0f, textColor.intValue, false, matrix4f, immediate, !depth, backgroundColor.intValue, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(line, xOffset, 0.0f, textColor.color(), false, matrix4f, immediate, !depth, backgroundColor.color(), LightmapTextureManager.MAX_LIGHT_COORDINATE);
             matrices.translate(0, lineHeight, 0);
         }
         immediate.draw();

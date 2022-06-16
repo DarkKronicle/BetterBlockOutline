@@ -25,7 +25,7 @@ public class GameRendererMixin {
             cancellable = true
     )
     private void shouldRenderOutline(CallbackInfoReturnable<Boolean> ci) {
-        if (!ConfigStorage.General.ACTIVE.config.getBooleanValue() || !ConfigStorage.General.ALWAYS_SHOW.config.getBooleanValue()) {
+        if (!ConfigStorage.getGeneral().getActive().getValue() || !ConfigStorage.getGeneral().getAlwaysShow().getValue()) {
             return;
         }
         if (!this.blockOutlineEnabled) {

@@ -51,7 +51,7 @@ public abstract class AbstractConnectedBlock {
      * Update's the voxel shape. By default, it just grabs the cube outline if configured, or just the vanilla one.
      */
     public void updateShape(MinecraftClient client, Entity entity) {
-        if (ConfigStorage.General.CUBE_OUTLINE.config.getBooleanValue()) {
+        if (ConfigStorage.getGeneral().getCubeOutline().getValue()) {
             shape = VoxelShapes.fullCube();
             return;
         }

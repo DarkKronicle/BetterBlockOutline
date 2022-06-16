@@ -1,7 +1,5 @@
 package io.github.darkkronicle.betterblockoutline.blockinfo.info3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import fi.dy.masa.malilib.render.RenderUtils;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import net.minecraft.block.InfestedBlock;
@@ -42,7 +40,9 @@ public class InfestedSilverfish extends AbstractBlockInfo3d {
     public void refreshSilverfish() {
         silverFish = new SilverfishEntity(EntityType.SILVERFISH, client.world);
         EntityRenderDispatcher entityRenderer = client.getEntityRenderDispatcher();
-        EntityRendererFactory.Context context = new EntityRendererFactory.Context(entityRenderer, client.getItemRenderer(), client.getResourceManager(), client.getEntityModelLoader(), client.textRenderer);
+        EntityRendererFactory.Context context = new EntityRendererFactory.Context(
+                entityRenderer, client.getItemRenderer(), client.getBlockRenderManager(), client.getEntityRenderDispatcher().getHeldItemRenderer(), client.getResourceManager(), client.getEntityModelLoader(), client.textRenderer
+        );
         renderer = new SilverfishCustomRenderer(context);
     }
 
@@ -68,12 +68,11 @@ public class InfestedSilverfish extends AbstractBlockInfo3d {
 
         renderer.render(silverFish, 0, 1f, matrices, immediate, 0xF000F0);
         RenderLayer renderLayer = RenderLayer.getEntityTranslucent(renderer.getTexture(silverFish));
-        buffer.setCameraPosition(0, 0, 0);
-        buffer.end();
+        buffer.sortFrom(0, 0, 0);
         renderLayer.startDrawing();
         // We set depth here to bypass other render layers
         RenderingUtil.setDepth(false);
-        BufferRenderer.draw(buffer);
+        BufferRenderer.drawWithShader(buffer.end());
         renderLayer.endDrawing();
 
         RenderingUtil.setDepth(true);
