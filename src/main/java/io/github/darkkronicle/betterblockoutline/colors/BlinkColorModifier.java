@@ -1,12 +1,11 @@
 package io.github.darkkronicle.betterblockoutline.colors;
 
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigDouble;
-import fi.dy.masa.malilib.util.Color4f;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
+import io.github.darkkronicle.darkkore.config.options.DoubleOption;
+import io.github.darkkronicle.darkkore.config.options.Option;
+import io.github.darkkronicle.darkkore.util.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +16,19 @@ public class BlinkColorModifier implements IColorModifier {
         return "betterblockoutline.config.blink." + string;
     }
 
-    private final SaveableConfig<ConfigDouble> duration = SaveableConfig.fromConfig("duration",
-            new ConfigDouble(translate("duration"), 5, 0.5, 30, translate("info.duration")));
+    private final DoubleOption duration = new DoubleOption("duration",
+            translate("duration"), translate("info.duration"), 5, 0.5, 30);
 
-    private final SaveableConfig<ConfigDouble> offset = SaveableConfig.fromConfig("offset",
-            new ConfigDouble(translate("offset"), 0, 0, 1, translate("info.duration")));
+    private final DoubleOption offset = new DoubleOption("offset",
+            translate("offset"), translate("info.duration"), 0, 0, 1);
 
 
     @Override
-    public Color4f getColor(BlockPosState block, Color4f original, long ms) {
-        double loopTime = duration.config.getDoubleValue() * 1000;
-        double percent = ((ms % loopTime) / loopTime + offset.config.getDoubleValue()) % 1;
-        float alpha = ColorUtil.getBlink(percent, original.a);
-        return new Color4f(original.r, original.g, original.b, alpha);
+    public Color getColor(BlockPosState block, Color original, long ms) {
+        double loopTime = duration.getValue() * 1000;
+        double percent = ((ms % loopTime) / loopTime + offset.getValue()) % 1;
+        float alpha = ColorUtil.getBlink(percent, original.alpha());
+        return new Color(original.red(), original.green(), original.blue(), (int) alpha);
     }
 
     @Override
@@ -38,8 +37,8 @@ public class BlinkColorModifier implements IColorModifier {
     }
 
     @Override
-    public List<SaveableConfig<? extends IConfigBase>> getSaveableConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> configs = new ArrayList<>();
+    public List<Option<?>> getOptions() {
+        List<Option<?>> configs = new ArrayList<>();
         configs.add(duration);
         configs.add(offset);
         return configs;

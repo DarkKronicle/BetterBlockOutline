@@ -1,24 +1,21 @@
 package io.github.darkkronicle.betterblockoutline.config.gui;
 
-import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
+import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
+import io.github.darkkronicle.darkkore.gui.ConfigScreen;
+import io.github.darkkronicle.darkkore.gui.Tab;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public class ColorModifierEditor extends GuiConfigsBase {
 
-    private final ConfigColorModifier modifier;
+public class ColorModifierEditor<T extends IColorModifier> extends ConfigScreen {
 
-    public ColorModifierEditor(ConfigColorModifier modifier, Screen parent) {
-        super(10, 26, BetterBlockOutline.MOD_ID, parent, "title");
-        setTitle(modifier.getName());
-        this.modifier = modifier;
+    public ColorModifierEditor(ConfigColorModifier<T> modifier, Screen parent) {
+        super(List.of(Tab.ofOptions(new Identifier(BetterBlockOutline.MOD_ID, "main"), "main", modifier.getOptions())));
+        this.setParent(parent);
     }
 
-    @Override
-    public List<ConfigOptionWrapper> getConfigs() {
-        return ConfigOptionWrapper.createFor(modifier.getOptions());
-    }
 }

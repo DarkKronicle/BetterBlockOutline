@@ -1,70 +1,62 @@
 package io.github.darkkronicle.betterblockoutline.config.hotkeys;
 
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyAction;
-import fi.dy.masa.malilib.util.InfoUtils;
+import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
-import io.github.darkkronicle.betterblockoutline.config.gui.ConfigScreen;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.PersistentOutlineRenderer;
+import io.github.darkkronicle.darkkore.hotkeys.BasicHotkey;
+import io.github.darkkronicle.darkkore.hotkeys.Hotkey;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeyHandler;
+import io.github.darkkronicle.darkkore.util.StringUtil;
+import net.minecraft.client.MinecraftClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HotkeyCallbacks {
 
     public static void setup() {
-        Callbacks callback = new Callbacks();
-        Hotkeys.MENU.config.getKeybind().setCallback(callback);
-        Hotkeys.TOGGLE_MOD_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.General.ACTIVE.config));
-        Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind().setCallback(callback);
-        Hotkeys.TOGGLE_INFO2D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo2d.ACTIVE.config));
-        Hotkeys.DISABLE_ALL_INFO3D.config.getKeybind().setCallback(callback);
-        Hotkeys.TOGGLE_INFO3D_ACTIVE.config.getKeybind().setCallback(new KeyToggleBoolean(ConfigStorage.BlockInfo3d.ACTIVE.config));
-        Hotkeys.TOGGLE_PERSISTENT_FOR_BLOCK.config.getKeybind().setCallback(callback);
-        Hotkeys.CLEAR_PERSISTENT_BLOCKS.config.getKeybind().setCallback(callback);
-        ConfigStorage.BlockInfoDirectionArrow.CYCLE_ARROW.config.getKeybind().setCallback(new KeyCycleOption(ConfigStorage.BlockInfoDirectionArrow.ARROW_TYPE.config));
-        for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
-            info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
-        }
-        for (AbstractBlockInfo info : BlockInfo3dRenderer.getInstance().getRenderers()) {
-            info.getActiveKey().config.getKeybind().setCallback(new KeyToggleBoolean(info.getActive().config));
-        }
-    }
+        HotkeyHandler.getInstance().add(BetterBlockOutline.MOD_ID, "generalhotkeys", () -> {
+            List<Hotkey> hotkeys = new ArrayList<>();
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getToggleModActive().getValue(), new KeyToggleBoolean(ConfigStorage.getGeneral().getActive())));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getToggleInfo3dActive().getValue(), new KeyToggleBoolean(ConfigStorage.getBlockInfo3d().getActive())));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getToggleInfo2dActive().getValue(), new KeyToggleBoolean(ConfigStorage.getBlockInfo2d().getActive())));
+            hotkeys.add(new BasicHotkey(ConfigStorage.getBlockInfoArrow().getCycleArrow().getValue(), new KeyCycleOption<>(ConfigStorage.getBlockInfoArrow().getArrowType())));
+            for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
+                hotkeys.add(new BasicHotkey(info.getActiveKey().getValue(), new KeyToggleBoolean(info.getActive())));
+            }
+            for (AbstractBlockInfo info : BlockInfo3dRenderer.getInstance().getRenderers()) {
+                hotkeys.add(new BasicHotkey(info.getActiveKey().getValue(), new KeyToggleBoolean(info.getActive())));
+            }
 
-    public static class Callbacks implements IHotkeyCallback {
-
-        @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key) {
-            if (key == Hotkeys.MENU.config.getKeybind()) {
-                GuiBase.openGui(new ConfigScreen());
-                return true;
-            } else if (key == Hotkeys.DISABLE_ALL_INFO2D.config.getKeybind()) {
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getMenu().getValue(), () -> MinecraftClient.getInstance().setScreen(ConfigStorage.getInstance().getScreen())));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getDisableAllInfo2d().getValue(), () -> {
                 for (AbstractBlockInfo info : BlockInfo2dRenderer.getInstance().getRenderers()) {
-                    info.getActive().config.setBooleanValue(false);
+                    info.getActive().setValue(false);
                 }
-                InfoUtils.printActionbarMessage("betterblockoutline.message.disableall2d");
-            }
-            if (key == Hotkeys.DISABLE_ALL_INFO3D.config.getKeybind()) {
+                MinecraftClient.getInstance().player.sendMessage(StringUtil.translateToText("betterblockoutline.message.disableall2d"), true);
+            }));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getDisableAllInfo3d().getValue(), () -> {
                 for (AbstractBlockInfo info : BlockInfo3dRenderer.getInstance().getRenderers()) {
-                    info.getActive().config.setBooleanValue(false);
+                    info.getActive().setValue(false);
                 }
-                InfoUtils.printActionbarMessage("betterblockoutline.message.disableall3d");
-            } else if (key == Hotkeys.TOGGLE_PERSISTENT_FOR_BLOCK.config.getKeybind()) {
+                MinecraftClient.getInstance().player.sendMessage(StringUtil.translateToText("betterblockoutline.message.disableall3d"), true);
+            }));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getTogglePersistentForBlock().getValue(), () -> {
                 if (PersistentOutlineRenderer.getInstance().toggleFromPlayer()) {
-                    InfoUtils.printActionbarMessage("betterblockoutline.message.toggleblock.success");
+                    MinecraftClient.getInstance().player.sendMessage(StringUtil.translateToText("betterblockoutline.message.toggleblock.success"));
                 } else {
-                    InfoUtils.printActionbarMessage("betterblockoutline.message.toggleblock.failure");
+                    MinecraftClient.getInstance().player.sendMessage(StringUtil.translateToText("betterblockoutline.message.toggleblock.failure"));
                 }
-            } else if (key == Hotkeys.CLEAR_PERSISTENT_BLOCKS.config.getKeybind()) {
+            }));
+            hotkeys.add(new BasicHotkey(Hotkeys.getInstance().getClearPersistentBlocks().getValue(), () -> {
                 PersistentOutlineRenderer.getInstance().clear();
-                InfoUtils.printActionbarMessage("betterblockoutline.message.clearedblocks");
-            } else {
-                return false;
-            }
-            return true;
-        }
+                MinecraftClient.getInstance().player.sendMessage(StringUtil.translateToText("betterblockoutline.message.clearedblocks"), true);
+            }));
+            return hotkeys;
+        });
     }
 
 }

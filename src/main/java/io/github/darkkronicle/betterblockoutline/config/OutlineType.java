@@ -1,14 +1,15 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.malilib.util.StringUtils;
+import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 /**
  * Type of way to render the outline of the block
  */
 @AllArgsConstructor
-public enum OutlineType implements IConfigOptionListEntry {
+public enum OutlineType implements OptionListEntry<OutlineType> {
     LINE("line"),
     STRIP("strip")
     ;
@@ -16,33 +17,23 @@ public enum OutlineType implements IConfigOptionListEntry {
     private final String configValue;
 
     @Override
-    public String getStringValue() {
+    public List<OutlineType> getAll() {
+        return List.of(values());
+    }
+
+    @Override
+    public String getSaveKey() {
         return configValue;
     }
 
     @Override
-    public String getDisplayName() {
-        return StringUtils.translate("betterblockoutline.config.outlinetype." + configValue);
+    public String getDisplayKey() {
+        return "betterblockoutline.config.outlinetype." + configValue;
     }
 
     @Override
-    public OutlineType cycle(boolean forward) {
-        int index = ordinal();
-        if (forward) {
-            index++;
-        } else {
-            index--;
-        }
-        return values()[index % values().length];
+    public String getInfoKey() {
+        return "betterblockoutline.config.outlinetype.info." + configValue;
     }
 
-    @Override
-    public OutlineType fromString(String value) {
-        for (OutlineType type : values()) {
-            if (type.getStringValue().equals(value)) {
-                return type;
-            }
-        }
-        return LINE;
-    }
 }

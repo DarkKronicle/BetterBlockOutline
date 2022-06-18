@@ -1,32 +1,32 @@
 package io.github.darkkronicle.betterblockoutline.config.hotkeys;
 
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import fi.dy.masa.malilib.util.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
+import io.github.darkkronicle.darkkore.util.StringUtil;
 
-public class HotkeyCustomName extends ConfigHotkey {
+public class HotkeyCustomName extends HotkeySettingsOption {
 
     private final String prettyReplacement;
     private final String prettyTranslation;
     private final String comment;
 
-    public HotkeyCustomName(String name, String defaultStorageString, KeybindSettings settings, String comment, String prettyReplacement) {
-        super(name, defaultStorageString, settings, comment);
-        this.prettyReplacement = prettyReplacement;
+    public HotkeyCustomName(String name, String displayName, String infoName, HotkeySettings settings) {
+        super(name, displayName, infoName, settings);
+        this.prettyReplacement = displayName;
         this.prettyTranslation = name;
-        this.comment = comment;
+        this.comment = infoName;
     }
 
     @Override
-    public String getComment() {
-        return StringUtils.translate(comment).replace("<hotkey>", StringUtils.translate(prettyReplacement));
+    public String getInfoKey() {
+        return StringUtil.translate(comment).replace("<hotkey>", StringUtil.translate(prettyReplacement));
     }
 
     @Override
-    public String getName() {
-        String pretty = StringUtils.translate(this.prettyTranslation);
-        String replacement = StringUtils.translate(prettyReplacement);
+    public String getNameKey() {
+        String pretty = StringUtil.translate(this.prettyTranslation);
+        String replacement = StringUtil.translate(prettyReplacement);
         return pretty.replace("<hotkey>", replacement);
     }
+
 }

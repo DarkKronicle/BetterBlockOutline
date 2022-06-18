@@ -1,41 +1,77 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.IConfigHandler;
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigColor;
-import fi.dy.masa.malilib.config.options.ConfigDouble;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
-import fi.dy.masa.malilib.config.options.ConfigOptionList;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import fi.dy.masa.malilib.util.FileUtils;
-import fi.dy.masa.malilib.util.JsonUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
+import io.github.darkkronicle.betterblockoutline.colors.ColorModifierContext;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
+import io.github.darkkronicle.betterblockoutline.config.gui.colormods.ColorModifierConfig;
 import io.github.darkkronicle.betterblockoutline.config.hotkeys.Hotkeys;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.DirectionArrow;
+import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
+import io.github.darkkronicle.darkkore.config.ModConfig;
+import io.github.darkkronicle.darkkore.config.impl.ConfigObject;
+import io.github.darkkronicle.darkkore.config.options.*;
+import io.github.darkkronicle.darkkore.gui.ConfigScreen;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
+import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
+import io.github.darkkronicle.darkkore.intialization.profiles.PlayerContextCheck;
+import io.github.darkkronicle.darkkore.util.Color;
+import io.github.darkkronicle.darkkore.util.FileUtil;
+import lombok.Getter;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ConfigStorage implements IConfigHandler {
+public class ConfigStorage extends ModConfig {
 
     public static final String CONFIG_FILE_NAME = BetterBlockOutline.MOD_ID + ".json";
-    public static final int CONFIG_VERSION = 1;
 
-    public static final Map<String, List<ConfigColorModifier>> COLOR_MODS = new HashMap<>();
+    @Getter
+    private final Map<String, List<ConfigColorModifier<?>>> colorModifications = new HashMap<>();
+
+    private final static ConfigStorage INSTANCE = new ConfigStorage();
+    private final static General GENERAL_INSTANCE = new General();
+    private final static BlockInfo2d BLOCKINFO2D_INSTANCE = new BlockInfo2d();
+    private final static BlockInfo3d BLOCKINFO3D_INSTANCE = new BlockInfo3d();
+    private final static BlockInfoDirectionArrow BLOCKINFOARROW_INSTANCE = new BlockInfoDirectionArrow();
+
+    private ConfigStorage() {}
+
+    public static ConfigStorage getInstance() {
+        return INSTANCE;
+    }
+
+    public static General getGeneral() {
+        return GENERAL_INSTANCE;
+    }
+
+    public static BlockInfo2d getBlockInfo2d() {
+        return BLOCKINFO2D_INSTANCE;
+    }
+
+    public static BlockInfo3d getBlockInfo3d() {
+        return BLOCKINFO3D_INSTANCE;
+    }
+
+    public static BlockInfoDirectionArrow getBlockInfoArrow() {
+        return BLOCKINFOARROW_INSTANCE;
+    }
+
+    @Override
+    public File getFile() {
+        return new File(new File(FileUtil.getConfigDirectory(), "betterblockoutline"), CONFIG_FILE_NAME);
+    }
+
+    public <T extends IColorModifier> void deleteColorMod(ConfigColorModifier<T> option) {
+        for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
+            if (entry.getValue().remove(option)) {
+                return;
+            }
+        }
+    }
 
     public static class General {
 
@@ -45,238 +81,285 @@ public class ConfigStorage implements IConfigHandler {
 
         public final static String NAME = "general";
 
-        public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
-                new ConfigBoolean(translate("active"), true, translate("info.active")));
+        private General() {}
 
-        public final static SaveableConfig<ConfigBoolean> ALWAYS_SHOW = SaveableConfig.fromConfig("alwaysShow",
-                new ConfigBoolean(translate("alwaysshow"), false, translate("info.alwaysshow")));
+        @Getter
+        private final BooleanOption active = new BooleanOption("active",
+                translate("active"), translate("info.active"), true);
 
-        public final static SaveableConfig<ConfigBoolean> SEE_THROUGH = SaveableConfig.fromConfig("seeThrough",
-                new ConfigBoolean(translate("seethrough"), false, translate("info.seethrough")));
+        @Getter
+        private final BooleanOption alwaysShow = new BooleanOption("alwaysShow",
+                translate("alwaysshow"), translate("info.alwaysshow"), false);
 
-        public final static SaveableConfig<ConfigColor> OUTLINE_COLOR = SaveableConfig.fromConfig("outlineColor",
-                new ConfigColor(translate("outlinecolor"), "#FF000000", translate("info.outlinecolor")));
+        @Getter
+        private final BooleanOption seeThrough = new BooleanOption("seeThrough",
+                translate("seethrough"), translate("info.seethrough"), false);
 
-        public final static SaveableConfig<ConfigColor> FILL_COLOR = SaveableConfig.fromConfig("fillColor",
-                new ConfigColor(translate("fillcolor"), "#00000000", translate("info.fillcolor")));
+        @Getter
+        private final ColorOption outlineColor = new ColorOption("outlineColor",
+                translate("outlinecolor"),  translate("info.outlinecolor"), new Color(0, 0, 0, 255));
 
-        public final static SaveableConfig<ConfigOptionList> OUTLINE_TYPE = SaveableConfig.fromConfig("outlineType",
-                new ConfigOptionList(translate("outlinetype"), OutlineType.LINE, translate("info.outlinetype")));
+        @Getter
+        private final ColorOption fillColor = new ColorOption("fillColor",
+                translate("fillcolor"), translate("info.fillcolor"), new Color(0, 0, 0, 0));
 
-        public final static SaveableConfig<ConfigDouble> OUTLINE_WIDTH = SaveableConfig.fromConfig("outlineWidth",
-                new ConfigDouble(translate("outlinewidth"), 1, 0.1, 30, translate("info.outlinewidth")));
+        @Getter
+        private final ListOption<OutlineType> outlineType = new ListOption<>("outlineType",
+                translate("outlinetype"), translate("info.outlinetype"), OutlineType.LINE);
 
-        public final static SaveableConfig<ConfigBoolean> CUBE_OUTLINE = SaveableConfig.fromConfig("cubeOutline",
-                new ConfigBoolean(translate("cubeoutline"), false, translate("info.cubeoutline")));
+        @Getter
+        private final DoubleOption outlineWidth = new DoubleOption("outlineWidth",
+                translate("outlinewidth"), translate("info.outlinewidth"), 1, 0.1, 30);
 
-        public final static SaveableConfig<ConfigOptionList> CONNECT_TYPE = SaveableConfig.fromConfig("connectType",
-                new ConfigOptionList(translate("connecttype"), ConnectType.SEAMLESS, translate("info.connecttype")));
+        @Getter
+        private final BooleanOption cubeOutline = new BooleanOption("cubeOutline",
+                translate("cubeoutline"),  translate("info.cubeoutline"), false);
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, ALWAYS_SHOW, SEE_THROUGH, OUTLINE_COLOR, FILL_COLOR, OUTLINE_TYPE, OUTLINE_WIDTH, CUBE_OUTLINE, CONNECT_TYPE);
+        @Getter
+        private final ListOption<ConnectType> connectType = new ListOption<>("connectType",
+                translate("connecttype"), translate("info.connecttype"), ConnectType.SEAMLESS);
+
+        @Getter
+        private final ImmutableList<Option<?>> options = ImmutableList.of(
+                active, alwaysShow, seeThrough, outlineColor, fillColor, outlineType, outlineWidth, cubeOutline, connectType
+        );
 
     }
 
     public static class BlockInfo2d {
 
         private static String translate(String string) {
-            return StringUtils.translate("betterblockoutline.config.blockinfo2d." + string);
+            return "betterblockoutline.config.blockinfo2d." + string;
         }
+
+        private BlockInfo2d() {}
 
         public final static String NAME = "info";
 
-        public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
-                new ConfigBoolean(translate("active"), false, translate("info.active")));
+        @Getter
+        private final BooleanOption active = new BooleanOption("active",
+                translate("active"), translate("info.active"), false);
 
-        public final static SaveableConfig<ConfigDouble> TEXT_SIZE = SaveableConfig.fromConfig("textSize",
-                new ConfigDouble(translate("textsize"), 0.02, 0.001, 0.5, translate("info.textsize")));
+        @Getter
+        private final DoubleOption textSize = new DoubleOption("textSize",
+                translate("textsize"), translate("info.textsize"), 0.02, 0.001, 0.5);
 
-        public final static SaveableConfig<ConfigDouble> LINE_HEIGHT = SaveableConfig.fromConfig("lineHeight",
-                new ConfigDouble(translate("lineheight"), 10, 3, 30, translate("info.lineheight")));
+        @Getter
+        private final DoubleOption lineHeight = new DoubleOption("lineHeight",
+                translate("lineheight"), translate("info.lineheight"), 10, 3, 30);
 
-        public final static SaveableConfig<ConfigColor> TEXT_COLOR = SaveableConfig.fromConfig("textColor",
-                new ConfigColor(translate("textcolor"), "#FFFFFFFF",  translate("info.textcolor")));
+        @Getter
+        private final ColorOption textColor = new ColorOption("textColor",
+                translate("textcolor"), translate("info.textcolor"), new Color(255, 255, 255, 255));
 
-        public final static SaveableConfig<ConfigColor> BACKGROUND_COLOR = SaveableConfig.fromConfig("backgroundColor",
-                new ConfigColor(translate("backgroundcolor"), "#20000000",  translate("info.backgroundcolor")));
+        @Getter
+        private final ColorOption backgroundColor = new ColorOption("backgroundColor",
+                translate("backgroundcolor"),  translate("info.backgroundcolor"), new Color(0, 0, 0, 32));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, TEXT_SIZE, LINE_HEIGHT, TEXT_COLOR, BACKGROUND_COLOR);
+        @Getter
+        private final ImmutableList<Option<?>> options = ImmutableList.of(active, textSize, lineHeight, textColor, backgroundColor);
 
     }
 
     public static class BlockInfo3d {
 
+        private BlockInfo3d() {}
+
         private static String translate(String string) {
-            return StringUtils.translate("betterblockoutline.config.blockinfo3d." + string);
+            return "betterblockoutline.config.blockinfo3d." + string;
         }
 
         public final static String NAME = "blockinfo3d";
 
-        public final static SaveableConfig<ConfigBoolean> ACTIVE = SaveableConfig.fromConfig("active",
-                new ConfigBoolean(translate("active"), false, translate("info.active")));
+        @Getter
+        private final BooleanOption active = new BooleanOption("active",
+                translate("active"), translate("info.active"), false);
 
-        public final static SaveableConfig<ConfigDouble> LINE_WIDTH = SaveableConfig.fromConfig("lineWidth",
-                new ConfigDouble(translate("linewidth"), 2, 0.1, 30, translate("info.linewidth")));
+        @Getter
+        private final DoubleOption lineWidth = new DoubleOption("lineWidth",
+                translate("linewidth"), translate("info.linewidth") , 2, 0.1, 30);
 
-        public final static SaveableConfig<ConfigColor> LINE_COLOR = SaveableConfig.fromConfig("lineColor",
-                new ConfigColor(translate("linecolor"), "#FFAFAFAF", translate("info.linecolor")));
+        @Getter
+        private final ColorOption lineColor = new ColorOption("lineColor",
+                translate("linecolor"), translate("info.linecolor"), new Color(175, 175, 175, 255));
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ACTIVE, LINE_WIDTH, LINE_COLOR);
+        @Getter
+        private final ImmutableList<Option<?>> options = ImmutableList.of(active, lineWidth, lineColor);
 
     }
 
     public static class BlockInfoDirectionArrow {
 
+        private BlockInfoDirectionArrow() {}
+
         private static String translate(String string) {
-            return StringUtils.translate("betterblockoutline.config.directionarrow." + string);
+            return "betterblockoutline.config.directionarrow." + string;
         }
 
         public final static String NAME = "directionarrow";
 
-        public final static SaveableConfig<ConfigOptionList> ARROW_TYPE = SaveableConfig.fromConfig("arrowType",
-                new ConfigOptionList(translate("arrowtype"), DirectionArrow.ArrowType.LINE_ARROW, translate("info.arrowtype")));
+        @Getter
+        private final ListOption<DirectionArrow.ArrowType> arrowType = new ListOption<>("arrowType",
+                translate("arrowtype"), translate("info.arrowtype"), DirectionArrow.ArrowType.LINE_ARROW);
 
-        public final static SaveableConfig<ConfigHotkey> CYCLE_ARROW = SaveableConfig.fromConfig("cycleArrow",
-                new ConfigHotkey(translate("cyclearrow"), "", KeybindSettings.MODIFIER_INGAME, translate("info.cyclearrow")));
+        @Getter
+        private final HotkeySettingsOption cycleArrow = new HotkeySettingsOption("cycleArrow",
+                translate("cyclearrow"), translate("info.cyclearrow"), new HotkeySettings(false, false, false, List.of(), PlayerContextCheck.getDefault()));
 
-        public final static SaveableConfig<ConfigBoolean> LOGICAL_DIRECTION = SaveableConfig.fromConfig("logicalDirection",
-                new ConfigBoolean(translate("logicaldirection"), false, translate("info.logicaldirection")));
+        @Getter
+        private final BooleanOption logicalDirection = new BooleanOption("logicalDirection",
+               translate("logicaldirection"), translate("info.logicaldirection"), false);
 
 
-        public static final ImmutableList<SaveableConfig<? extends IConfigBase>> OPTIONS = ImmutableList.of(ARROW_TYPE, CYCLE_ARROW, LOGICAL_DIRECTION);
+        @Getter
+        private final ImmutableList<Option<?>> options = ImmutableList.of(arrowType, cycleArrow, logicalDirection);
 
     }
 
+    private OptionSection generalOptions;
 
+    private OptionSection blockInfo2dOptions;
+    private OptionSection blockInfo3dOptions;
+    private OptionSection arrowOptions;
+    private OptionSection hotkeys;
+    private OptionSection colorMods;
 
     @Override
-    public void load() {
-        loadFromFile();
+    public List<Option<?>> getOptions() {
+        updateSections();
+        return List.of(generalOptions, blockInfo2dOptions, blockInfo3dOptions, arrowOptions, hotkeys);
+    }
+
+    public List<OptionSection> getCategories() {
+        updateSections();
+        List<Option<?>> render2dHotkeys = new ArrayList<>(BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
+        List<Option<?>> render3dHotkeys = new ArrayList<>(BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
+        OptionSection hotkeys = new OptionSection("hotkeys", "betterblockoutline.config.tab.hotkeys", "betterblockoutline.config.tab.info.hotkeys", List.of(
+                new OptionSection("general", "betterblockoutline.config.tab.hotkeys.general", "betterblockoutline.config.tab.hotkeys.info.general",
+                        Hotkeys.getInstance().getOptions()
+                ),
+                new OptionSection("blockinfo2d", "betterblockoutline.config.tab.hotkeys.blockinfo2d", "betterblockoutline.config.tab.hotkeys.info.blockinfo2d",
+                        render2dHotkeys
+                ),
+                new OptionSection("blockinfo3d", "betterblockoutline.config.tab.hotkeys.blockinfo3d", "betterblockoutline.config.tab.hotkeys.info.blockinfo3d",
+                        render3dHotkeys
+                )
+        ));
+        OptionSection blockInfo = new OptionSection("blockinfo", "betterblockoutline.config.tab.blockinfo", "betterblockoutline.config.tab.info.blockinfo", List.of(
+                blockInfo2dOptions,
+                new OptionSection("blockinfo3d", "betterblockoutline.config.tab.blockinfo.blockinfo3d", "betterblockoutline.config.tab.blockinfo.info.blockinfo3d", List.of(
+                        new OptionSection("general", "betterblockoutline.config.tab.blockinfo.blockinfo3d.general", "betterblockoutline.config.tab.blockinfo.blockinfo3d.info.general", blockInfo3dOptions.getOptions()),
+                        arrowOptions
+                ))
+        ));
+        return List.of(generalOptions, colorMods, blockInfo, hotkeys);
+    }
+
+    public void updateSections() {
+        List<Option<?>> hotkeyOptions = new ArrayList<>(Hotkeys.getInstance().getOptions());
+        hotkeyOptions.addAll(BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
+        hotkeyOptions.addAll(BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
+        hotkeys = new OptionSection(
+                Hotkeys.NAME, "betterblockoutline.config.tab.hotkeys", "betterblockoutline.config.tab.info.hotkeys",
+                hotkeyOptions
+        );
+        arrowOptions = new OptionSection(
+                BlockInfoDirectionArrow.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo3d.directionarrow", "betterblockoutline.config.tab.blockinfo.blockinfo3d.info.directionarrow",
+                getBlockInfoArrow().getOptions()
+        );
+        List<Option<?>> options3d = new ArrayList<>(getBlockInfo3d().getOptions());
+        options3d.addAll(BlockInfo3dRenderer.getInstance().getActiveConfigs());
+        blockInfo3dOptions = new OptionSection(
+                BlockInfo3d.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo3d", "betterblockoutline.config.tab.blockinfo.info.blockinfo3d",
+                options3d
+        );
+        List<Option<?>> options2d = new ArrayList<>(getBlockInfo2d().getOptions());
+        options2d.addAll(BlockInfo2dRenderer.getInstance().getActiveConfigs());
+        blockInfo2dOptions = new OptionSection(
+                BlockInfo2d.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo2d", "betterblockoutline.config.tab.blockinfo.info.blockinfo2d",
+                options2d
+        );
+        generalOptions = new OptionSection(
+                General.NAME, "betterblockoutline.config.tab.general", "betterblockoutline.config.tab.info.general",
+                getGeneral().getOptions()
+        );
+
+        List<Option<?>> modOptions = new ArrayList<>();
+        for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
+            List<Option<?>> fillModsOptions = new ArrayList<>(entry.getValue());
+            fillModsOptions.add(0, new ColorModifierConfig(ColorModifierContext.FILL.fromString(entry.getKey())));
+            modOptions.add(new OptionSection(
+                    entry.getKey(), "betterblockoutline.config.tab." + entry.getKey(), "betterblockoutline.config.tab.info." + entry.getKey(),
+                    fillModsOptions
+            ));
+        }
+
+        colorMods = new OptionSection(
+                "color_modifiers", "betterblockoutline.config.tab.color_mods", "betterblockoutline.config.tab.info.color_mods",
+                modOptions
+        );
     }
 
     @Override
     public void save() {
-        saveFromFile();
+        super.save();
+        config.load();
+        // Custom save logic for color mods
+        ConfigObject modsConfig = config.getConfig().createNew();
+        for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
+            List<ConfigObject> nest = new ArrayList<>();
+            for (ConfigColorModifier<?> mod : entry.getValue()) {
+                ConfigObject obj = modsConfig.createNew();
+                mod.save(obj);
+                obj.set("type", mod.getType().getSaveKey());
+                nest.add(obj);
+            }
+
+            modsConfig.set(entry.getKey(), nest);
+        }
+
+        config.getConfig().set("color_modifiers", modsConfig);
+        config.save();
+        config.close();
     }
 
-    public static void loadFromFile() {
-        File configFile = FileUtils.getConfigDirectory().toPath().resolve(BetterBlockOutline.MOD_ID).resolve(CONFIG_FILE_NAME).toFile();
-
-        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
-            JsonElement element = JsonUtils.parseJsonFile(configFile);
-
-            if (element != null && element.isJsonObject()) {
-                JsonObject root = element.getAsJsonObject();
-
-                readOptions(root, General.NAME, General.OPTIONS);
-                readOptions(root, BlockInfo2d.NAME, BlockInfo2d.OPTIONS);
-                readOptions(root, BlockInfo2d.NAME, BlockInfo2dRenderer.getInstance().getActiveConfigs());
-                readOptions(root, BlockInfo3d.NAME, BlockInfo3d.OPTIONS);
-                readOptions(root, BlockInfo3d.NAME, BlockInfo3dRenderer.getInstance().getActiveConfigs());
-                readOptions(root, BlockInfoDirectionArrow.NAME, BlockInfoDirectionArrow.OPTIONS);
-                readOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
-                readOptions(root, Hotkeys.NAME, BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
-                readOptions(root, Hotkeys.NAME, BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
-
-                COLOR_MODS.clear();
-                JsonElement colorModsEl = root.get("color_modifiers");
-                if (colorModsEl != null && colorModsEl.isJsonObject()) {
-                    JsonObject colorMods = colorModsEl.getAsJsonObject();
-                    for (Map.Entry<String, JsonElement> value : colorMods.entrySet()) {
-                        if (!value.getValue().isJsonArray()) {
-                            continue;
-                        }
-                        for (JsonElement el : value.getValue().getAsJsonArray()) {
-                            if (!el.isJsonObject()) {
-                                continue;
-                            }
-                            JsonObject obj = el.getAsJsonObject();
-                            if (!obj.has("type")) {
-                                continue;
-                            }
-                            ColorModifierType type = ColorModifierType.CHROMA.fromString(obj.get("type").getAsString());
-                            ConfigColorModifier mod = new ConfigColorModifier(type);
-                            mod.load(el);
-                            addColorMod(value.getKey(), mod);
-                        }
-                    }
-                }
-
-                int version = JsonUtils.getIntegerOrDefault(root, "configVersion", 0);
+    @Override
+    public void rawLoad() {
+        super.rawLoad();
+        ConfigObject obj = config.getConfig();
+        Optional<ConfigObject> mods = obj.getOptional("color_modifiers");
+        if (mods.isEmpty()) {
+            return;
+        }
+        colorModifications.clear();
+        for (Map.Entry<String, Object> mod : mods.get().getValues().entrySet()) {
+            List<ConfigObject> m = (List<ConfigObject>) mod.getValue();
+            for (ConfigObject o : m) {
+                ColorModifierType type = ColorModifierType.CHROMA.fromString(o.get("type"));
+                ConfigColorModifier<?> colorMod = new ConfigColorModifier<>(type);
+                colorMod.load(o);
+                addColorMod(mod.getKey(), colorMod);
             }
         }
     }
 
-    public static void saveFromFile() {
-        File dir = FileUtils.getConfigDirectory().toPath().resolve(BetterBlockOutline.MOD_ID).toFile();
-
-        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-            JsonObject root = new JsonObject();
-
-            writeOptions(root, General.NAME, General.OPTIONS);
-            writeOptions(root, BlockInfo2d.NAME, BlockInfo2d.OPTIONS);
-            writeOptions(root, BlockInfo2d.NAME, BlockInfo2dRenderer.getInstance().getActiveConfigs());
-            writeOptions(root, BlockInfo3d.NAME, BlockInfo3d.OPTIONS);
-            writeOptions(root, BlockInfo3d.NAME, BlockInfo3dRenderer.getInstance().getActiveConfigs());
-            writeOptions(root, BlockInfoDirectionArrow.NAME, BlockInfoDirectionArrow.OPTIONS);
-            writeOptions(root, Hotkeys.NAME, Hotkeys.OPTIONS);
-            writeOptions(root, Hotkeys.NAME, BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
-            writeOptions(root, Hotkeys.NAME, BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
-
-
-            JsonObject colorMods = new JsonObject();
-
-            for (Map.Entry<String, List<ConfigColorModifier>> mods : COLOR_MODS.entrySet()) {
-                JsonArray modParent = new JsonArray();
-                for (ConfigColorModifier mod : mods.getValue()) {
-                    JsonObject modValue = mod.save();
-                    modValue.addProperty("type", mod.getType().getStringValue());
-                    modParent.add(modValue);
-                }
-                colorMods.add(mods.getKey(), modParent);
-            }
-
-            root.add("color_modifiers", colorMods);
-
-            root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
-            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
-        }
-    }
-
-    public static void readOptions(JsonObject root, String category, List<SaveableConfig<?>> options) {
-        JsonObject obj = JsonUtils.getNestedObject(root, category, false);
-
-        if (obj != null) {
-            for (SaveableConfig<?> conf : options) {
-                IConfigBase option = conf.config;
-                if (obj.has(conf.key)) {
-                    option.setValueFromJsonElement(obj.get(conf.key));
-                }
-            }
-        }
-    }
-
-    public static void writeOptions(
-            JsonObject root, String category, List<SaveableConfig<?>> options) {
-        JsonObject obj = JsonUtils.getNestedObject(root, category, true);
-
-        for (SaveableConfig<?> option : options) {
-            obj.add(option.key, option.config.getAsJsonElement());
-        }
-    }
-
-    public static void addColorMod(String key, ConfigColorModifier modifier) {
-        List<ConfigColorModifier> mods = getColorMods(key);
+    public void addColorMod(String key, ConfigColorModifier<?> modifier) {
+        List<ConfigColorModifier<?>> mods = getColorMods(key);
         mods.add(modifier);
         Collections.sort(mods);
     }
 
-    public static List<ConfigColorModifier> getColorMods(String key) {
-        List<ConfigColorModifier> mods = COLOR_MODS.get(key);
+    public List<ConfigColorModifier<?>> getColorMods(String key) {
+        List<ConfigColorModifier<?>> mods = colorModifications.get(key);
         if (mods != null) {
             return mods;
         }
-        COLOR_MODS.put(key, new ArrayList<>());
+        colorModifications.put(key, new ArrayList<>());
         return getColorMods(key);
     }
 
+    @Override
+    public Screen getScreen() {
+        return ConfigScreen.ofSections(getCategories());
+    }
 }

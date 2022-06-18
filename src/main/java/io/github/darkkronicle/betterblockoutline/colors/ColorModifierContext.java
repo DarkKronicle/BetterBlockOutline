@@ -1,24 +1,22 @@
-package io.github.darkkronicle.betterblockoutline.config;
+package io.github.darkkronicle.betterblockoutline.colors;
 
 import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-/**
- * Type of way to connect blocks rendered over.;
- */
 @AllArgsConstructor
-public enum ConnectType implements OptionListEntry<ConnectType> {
-    NONE("none"),
-    BLOCKS("blocks"),
-    SEAMLESS("seamless")
+public enum ColorModifierContext implements OptionListEntry<ColorModifierContext> {
+    FILL("fill"),
+    OUTLINE("outline")
     ;
 
+    @Getter
     private final String configValue;
 
     @Override
-    public List<ConnectType> getAll() {
+    public List<ColorModifierContext> getAll() {
         return List.of(values());
     }
 
@@ -29,11 +27,11 @@ public enum ConnectType implements OptionListEntry<ConnectType> {
 
     @Override
     public String getDisplayKey() {
-        return "betterblockoutline.config.connecttype." + configValue;
+        return "betterblockoutline.config.tab." + configValue;
     }
 
     @Override
     public String getInfoKey() {
-        return "betterblockoutline.config.connecttype.info." + configValue;
+        return "betterblockoutline.config.tab.info." + configValue;
     }
 }

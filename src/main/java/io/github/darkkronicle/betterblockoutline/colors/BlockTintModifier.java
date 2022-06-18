@@ -1,14 +1,12 @@
 package io.github.darkkronicle.betterblockoutline.colors;
 
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigColor;
-import fi.dy.masa.malilib.config.options.ConfigDouble;
-import fi.dy.masa.malilib.config.options.ConfigString;
-import fi.dy.masa.malilib.util.Color4f;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
-import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
+import io.github.darkkronicle.darkkore.config.options.ColorOption;
+import io.github.darkkronicle.darkkore.config.options.DoubleOption;
+import io.github.darkkronicle.darkkore.config.options.Option;
+import io.github.darkkronicle.darkkore.config.options.StringOption;
+import io.github.darkkronicle.darkkore.util.Color;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
@@ -17,52 +15,52 @@ import java.util.regex.Pattern;
 
 public class BlockTintModifier implements IColorModifier {
 
-    private final SaveableConfig<ConfigColor> tint = SaveableConfig.fromConfig("tint",
-            new ConfigColor("betterblockoutline.config.tint.color", "#FFFFFFFF", "betterblockoutline.config.tint.info.color"));
+    private final ColorOption tint = new ColorOption("tint",
+            "betterblockoutline.config.tint.color", "betterblockoutline.config.tint.info.color", new Color(255, 255, 255, 255));
 
-    private final SaveableConfig<ConfigDouble> percent = SaveableConfig.fromConfig("percent",
-            new ConfigDouble("betterblockoutline.config.tint.percent", 1, 0, 1, "betterblockoutline.config.tint.info.percent"));
+    private final DoubleOption percent = new DoubleOption("percent",
+            "betterblockoutline.config.tint.percent", "betterblockoutline.config.tint.info.percent", 1, 0, 1);
 
-    private final SaveableConfig<ConfigString> blockNameRegex = SaveableConfig.fromConfig("blockNameRegex",
-            new ConfigString("betterblockoutline.config.tint.blocknameregex", "grass", "betterblockoutline.config.tint.info.blocknameregex"));
+    private final StringOption blockNameRegex = new StringOption("blockNameRegex",
+            "betterblockoutline.config.tint.blocknameregex", "betterblockoutline.config.tint.info.blocknameregex", "grass");
 
     private Pattern pattern;
 
     private String lastString = "";
 
     private void compilePattern() {
-        lastString = blockNameRegex.config.getStringValue();
+        lastString = blockNameRegex.getValue();
         pattern = Pattern.compile(lastString);
     }
 
     @Override
-    public Color4f getColor(BlockPosState block, Color4f original, long ms) {
+    public Color getColor(BlockPosState block, Color original, long ms) {
         String name = Registry.BLOCK.getId(block.getState().getBlock()).toString();
-        if (!lastString.equals(blockNameRegex.config.getStringValue())) {
+        if (!lastString.equals(blockNameRegex.getValue())) {
             compilePattern();
         }
         if (!pattern.matcher(name).find()) {
             return original;
         }
-        float percent = (float) this.percent.config.getDoubleValue();
+        float percent = (float) this.percent.getValue().doubleValue();
         float invPercent = 1 - percent;
         if (percent == 0) {
             return original;
         }
-        Color4f tintColor = ColorUtil.fromInt(tint.config.getIntegerValue());
+        Color tintColor = tint.getValue();
         if (percent == 1) {
             return tintColor;
         }
-        float r = invPercent * original.r + percent * Math.min(tintColor.r, 1);
-        float g = invPercent * original.g + percent * Math.min(tintColor.g, 1);
-        float b = invPercent * original.b + percent * Math.min(tintColor.b, 1);
-        float a = invPercent * original.a + percent * Math.min(tintColor.a, 1);
-        return new Color4f(r, g, b, a);
+        float r = invPercent * original.red() + percent * Math.min(tintColor.red(), 255);
+        float g = invPercent * original.green() + percent * Math.min(tintColor.green(), 255);
+        float b = invPercent * original.blue() + percent * Math.min(tintColor.blue(), 255);
+        float a = invPercent * original.alpha() + percent * Math.min(tintColor.alpha(), 255);
+        return new Color((int) r, (int) g, (int) b, (int) a);
     }
 
     @Override
-    public List<SaveableConfig<? extends IConfigBase>> getSaveableConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> configs = new ArrayList<>();
+    public List<Option<?>> getOptions() {
+        List<Option<?>> configs = new ArrayList<>();
         configs.add(tint);
         configs.add(percent);
         configs.add(blockNameRegex);

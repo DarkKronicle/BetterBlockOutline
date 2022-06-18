@@ -1,14 +1,12 @@
 package io.github.darkkronicle.betterblockoutline.colors;
 
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigColor;
-import fi.dy.masa.malilib.config.options.ConfigDouble;
-import fi.dy.masa.malilib.util.Color4f;
-import io.github.darkkronicle.betterblockoutline.config.SaveableConfig;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
-import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
+import io.github.darkkronicle.darkkore.config.options.BooleanOption;
+import io.github.darkkronicle.darkkore.config.options.ColorOption;
+import io.github.darkkronicle.darkkore.config.options.DoubleOption;
+import io.github.darkkronicle.darkkore.config.options.Option;
+import io.github.darkkronicle.darkkore.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.MiningToolItem;
@@ -18,46 +16,46 @@ import java.util.List;
 
 public class ToolColorModifier implements IColorModifier {
 
-    private final SaveableConfig<ConfigBoolean> onSuitable = SaveableConfig.fromConfig("onSuitable",
-            new ConfigBoolean("betterblockoutline.config.tool.onsuitable", true, "betterblockoutline.config.tool.info.onsuitable"));
+    private final BooleanOption onSuitable = new BooleanOption("onSuitable",
+            "betterblockoutline.config.tool.onsuitable", "betterblockoutline.config.tool.info.onsuitable", true);
 
-    private final SaveableConfig<ConfigColor> tint = SaveableConfig.fromConfig("tint",
-            new ConfigColor("betterblockoutline.config.tool.color", "#FFFFFFFF", "betterblockoutline.config.tool.info.color"));
+    private final ColorOption tint = new ColorOption("tint",
+            "betterblockoutline.config.tool.color", "betterblockoutline.config.tool.info.color", new Color(255, 255, 255, 255));
 
-    private final SaveableConfig<ConfigDouble> percent = SaveableConfig.fromConfig("percent",
-            new ConfigDouble("betterblockoutline.config.tool.percent", 1, 0, 1, "betterblockoutline.config.tool.info.percent"));
+    private final DoubleOption percent = new DoubleOption("percent",
+            "betterblockoutline.config.tool.percent", "betterblockoutline.config.tool.info.percent", 1, 0, 1);
 
 
     @Override
-    public Color4f getColor(BlockPosState block, Color4f original, long ms) {
+    public Color getColor(BlockPosState block, Color original, long ms) {
         Item holding = MinecraftClient.getInstance().player.getInventory().getMainHandStack().getItem();
         if (!(holding instanceof MiningToolItem)) {
             return original;
         }
         MiningToolItem mining = (MiningToolItem) holding;
         boolean suitable = mining.isSuitableFor(block.getState());
-        if (suitable != onSuitable.config.getBooleanValue()) {
+        if (suitable != onSuitable.getValue()) {
             return original;
         }
-        float percent = (float) this.percent.config.getDoubleValue();
+        float percent = (float) this.percent.getValue().doubleValue();
         float invPercent = 1 - percent;
         if (percent == 0) {
             return original;
         }
-        Color4f tintColor = ColorUtil.fromInt(tint.config.getIntegerValue());
+        Color tintColor = tint.getValue();
         if (percent == 1) {
             return tintColor;
         }
-        float r = invPercent * original.r + percent * tintColor.r;
-        float g = invPercent * original.g + percent * tintColor.g;
-        float b = invPercent * original.b + percent * tintColor.b;
-        float a = invPercent * original.a + percent * tintColor.a;
-        return new Color4f(r, g, b, a);
+        float r = invPercent * original.red() + percent * tintColor.red();
+        float g = invPercent * original.green() + percent * tintColor.green();
+        float b = invPercent * original.blue() + percent * tintColor.blue();
+        float a = invPercent * original.alpha() + percent * tintColor.alpha();
+        return new Color((int) r, (int) g, (int) b, (int) a);
     }
 
     @Override
-    public List<SaveableConfig<? extends IConfigBase>> getSaveableConfigs() {
-        List<SaveableConfig<? extends IConfigBase>> configs = new ArrayList<>();
+    public List<Option<?>> getOptions() {
+        List<Option<?>> configs = new ArrayList<>();
         configs.add(onSuitable);
         configs.add(tint);
         configs.add(percent);

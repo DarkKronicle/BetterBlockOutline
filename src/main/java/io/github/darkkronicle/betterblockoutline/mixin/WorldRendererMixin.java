@@ -22,7 +22,7 @@ public class WorldRendererMixin {
             cancellable = true
     )
     private void drawBlockOutline(MatrixStack matrices, VertexConsumer vertexConsumer, Entity entity, double d, double e, double f, BlockPos pos, BlockState state, CallbackInfo ci) {
-        if (ConfigStorage.General.ACTIVE.config.getBooleanValue()) {
+        if (ConfigStorage.getGeneral().getActive().getValue()) {
             BlockOutlineManager.getInstance().drawOutline(matrices, vertexConsumer, entity, d, e, f, pos, state);
             ci.cancel();
         }

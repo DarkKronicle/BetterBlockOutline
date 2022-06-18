@@ -1,6 +1,10 @@
 package io.github.darkkronicle.betterblockoutline;
 
-import fi.dy.masa.malilib.event.InitializationHandler;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
+import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
+import io.github.darkkronicle.darkkore.config.ConfigurationManager;
+import io.github.darkkronicle.darkkore.intialization.InitializationHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +16,10 @@ public class BetterBlockOutline implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        InitializationHandler.getInstance().registerInitializationHandler(new BetterBlockOutlineInitializer());
+        InitializationHandler.getInstance().registerInitializer(MOD_ID, 1, new BetterBlockOutlineInitializer());
+        ConfigurationManager.getInstance().add(ConfigStorage.getInstance());
+        BlockInfo2dRenderer.getInstance().setup();
+        BlockInfo3dRenderer.getInstance().setup();
     }
 
 }

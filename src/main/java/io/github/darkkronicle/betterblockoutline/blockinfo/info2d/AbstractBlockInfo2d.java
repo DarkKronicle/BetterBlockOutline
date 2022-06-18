@@ -1,11 +1,11 @@
 package io.github.darkkronicle.betterblockoutline.blockinfo.info2d;
 
-import fi.dy.masa.malilib.util.Color4f;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
+import io.github.darkkronicle.darkkore.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
@@ -72,10 +72,10 @@ public abstract class AbstractBlockInfo2d extends AbstractBlockInfo {
     }
 
     public static void drawStringLines(MatrixStack matrices, MinecraftClient client, String[] lines, Vector3d position) {
-        Color4f textColor = ColorUtil.fromInt(ConfigStorage.BlockInfo2d.TEXT_COLOR.config.getIntegerValue());
-        Color4f backgroundColor = ColorUtil.fromInt(ConfigStorage.BlockInfo2d.BACKGROUND_COLOR.config.getIntegerValue());
-        double size = ConfigStorage.BlockInfo2d.TEXT_SIZE.config.getDoubleValue();
-        double lineHeight = ConfigStorage.BlockInfo2d.LINE_HEIGHT.config.getDoubleValue();
+        Color textColor = ConfigStorage.getBlockInfo2d().getTextColor().getValue();
+        Color backgroundColor = ConfigStorage.getBlockInfo2d().getBackgroundColor().getValue();
+        double size = ConfigStorage.getBlockInfo2d().getTextSize().getValue();
+        double lineHeight = ConfigStorage.getBlockInfo2d().getLineHeight().getValue();
         RenderingUtil.drawStringLines(matrices, client.textRenderer, lines, client.gameRenderer.getCamera(), position, (float) size, (float) lineHeight, false, textColor, backgroundColor);
     }
 }

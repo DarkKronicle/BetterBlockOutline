@@ -1,25 +1,25 @@
 package io.github.darkkronicle.betterblockoutline.config.hotkeys;
 
-import fi.dy.masa.malilib.config.options.ConfigOptionList;
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyAction;
-import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 
-public class KeyCycleOption implements IHotkeyCallback {
+import io.github.darkkronicle.darkkore.config.options.ListOption;
+import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
+import io.github.darkkronicle.darkkore.util.FluidText;
+import io.github.darkkronicle.darkkore.util.StringUtil;
+import io.github.darkkronicle.darkkore.util.text.StyleFormatter;
+import net.minecraft.client.MinecraftClient;
 
-    private final ConfigOptionList option;
+public class KeyCycleOption<T extends ListOption<V>, V extends OptionListEntry<V>> implements Runnable {
 
-    public KeyCycleOption(ConfigOptionList option) {
+    private final T option;
+
+    public KeyCycleOption(T option) {
         this.option = option;
     }
 
-    @Override
-    public boolean onKeyAction(KeyAction action, IKeybind key) {
-        option.setOptionListValue(option.getOptionListValue().cycle(true));
-        String message = StringUtils.translate("betterblockoutline.message.cycleoption", option.getPrettyName(), option.getOptionListValue().getDisplayName());
-        InfoUtils.printActionbarMessage(message);
-        return true;
+    public void run() {
+        option.setValue(option.getValue().next(true));
+        String message = StringUtil.translate("betterblockoutline.message.cycleoption");
+        message = message.formatted(StringUtil.translate(option.getKey()), StringUtil.translate(option.getValue().getDisplayKey()));
+        MinecraftClient.getInstance().player.sendMessage(StyleFormatter.formatText(new FluidText(message)), true);
     }
 }
