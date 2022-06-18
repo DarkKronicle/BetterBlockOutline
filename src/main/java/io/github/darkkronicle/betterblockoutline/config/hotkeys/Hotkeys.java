@@ -1,7 +1,6 @@
 package io.github.darkkronicle.betterblockoutline.config.hotkeys;
 
 import com.google.common.collect.ImmutableList;
-import io.github.darkkronicle.darkkore.config.options.BasicOption;
 import io.github.darkkronicle.darkkore.config.options.Option;
 import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
 import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;

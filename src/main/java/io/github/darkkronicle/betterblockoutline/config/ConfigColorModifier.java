@@ -1,5 +1,6 @@
 package io.github.darkkronicle.betterblockoutline.config;
 
+import io.github.darkkronicle.betterblockoutline.colors.BlinkColorModifier;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.darkkore.config.impl.ConfigObject;
@@ -29,6 +30,8 @@ public class ConfigColorModifier<T extends IColorModifier> extends BasicOption<T
         super("colorConfig", type.getDisplayKey(), type.getInfoKey(), null);
         this.type = type;
         this.colorModifier = (T) this.type.getColorModifier().get();
+        this.setValue(this.colorModifier);
+        this.setDefaultValue(this.getValue());
         // Generate random string to make it hard to confuse
         this.id = UUID.randomUUID().toString().substring(0, 7) + "-" + this.type.getSaveKey();
     }

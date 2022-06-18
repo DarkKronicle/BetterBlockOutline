@@ -1,11 +1,12 @@
 package io.github.darkkronicle.betterblockoutline.config.gui.colormods;
 
 import io.github.darkkronicle.betterblockoutline.config.ConfigColorModifier;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.config.gui.ColorModifierEditor;
 import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.darkkore.gui.components.Component;
 import io.github.darkkronicle.darkkore.gui.components.impl.ButtonComponent;
-import io.github.darkkronicle.darkkore.gui.components.transform.MultiComponent;
+import io.github.darkkronicle.darkkore.gui.components.transform.ListComponent;
 import io.github.darkkronicle.darkkore.gui.components.transform.PositionedComponent;
 import io.github.darkkronicle.darkkore.gui.config.OptionComponent;
 import io.github.darkkronicle.darkkore.util.Color;
@@ -36,13 +37,24 @@ public class ColorModifierComponent<T extends IColorModifier> extends OptionComp
 
     @Override
     public Component getMainComponent() {
-        MultiComponent component = new MultiComponent(parent, -1, -1);
+        ListComponent component = new ListComponent(parent, -1, -1, false);
+        component.setLeftPad(0);
+        component.setTopPad(0);
         ButtonComponent edit = new ButtonComponent(
-                parent, StringUtil.translateToText("betterblockoutline.config.button.configure"),
+                parent, -1, 14, StringUtil.translateToText("betterblockoutline.config.button.configure"),
                 new Color(100, 100, 100, 100), new Color(150, 150, 150, 150),
                 button -> MinecraftClient.getInstance().setScreen(new ColorModifierEditor<>(option, parent))
         );
         component.addComponent(edit);
-        return new PositionedComponent(parent, component, 1, 1);
+        ButtonComponent delete = new ButtonComponent(
+                parent, -1, 14, StringUtil.translateToText("betterblockoutline.config.button.delete"),
+                new Color(100, 100, 100, 100), new Color(150, 150, 150, 150),
+                button -> {
+                    ConfigStorage.getInstance().deleteColorMod(option);
+                    MinecraftClient.getInstance().setScreen(ConfigStorage.getInstance().getScreen());
+                }
+        );
+        component.addComponent(delete);
+        return new PositionedComponent(parent, component, 0, 0);
     }
 }

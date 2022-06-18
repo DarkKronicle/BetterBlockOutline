@@ -2,9 +2,12 @@ package io.github.darkkronicle.betterblockoutline.config;
 
 import com.google.common.collect.ImmutableList;
 import io.github.darkkronicle.betterblockoutline.BetterBlockOutline;
+import io.github.darkkronicle.betterblockoutline.colors.ColorModifierContext;
 import io.github.darkkronicle.betterblockoutline.colors.ColorModifierType;
+import io.github.darkkronicle.betterblockoutline.config.gui.colormods.ColorModifierConfig;
 import io.github.darkkronicle.betterblockoutline.config.hotkeys.Hotkeys;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info3d.DirectionArrow;
+import io.github.darkkronicle.betterblockoutline.interfaces.IColorModifier;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo2dRenderer;
 import io.github.darkkronicle.betterblockoutline.renderers.BlockInfo3dRenderer;
 import io.github.darkkronicle.darkkore.config.ModConfig;
@@ -60,6 +63,14 @@ public class ConfigStorage extends ModConfig {
     @Override
     public File getFile() {
         return new File(new File(FileUtil.getConfigDirectory(), "betterblockoutline"), CONFIG_FILE_NAME);
+    }
+
+    public <T extends IColorModifier> void deleteColorMod(ConfigColorModifier<T> option) {
+        for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
+            if (entry.getValue().remove(option)) {
+                return;
+            }
+        }
     }
 
     public static class General {
@@ -216,12 +227,32 @@ public class ConfigStorage extends ModConfig {
     @Override
     public List<Option<?>> getOptions() {
         updateSections();
-        return List.of(generalOptions, blockInfo2dOptions, blockInfo3dOptions, arrowOptions, hotkeys, colorMods);
+        return List.of(generalOptions, blockInfo2dOptions, blockInfo3dOptions, arrowOptions, hotkeys);
     }
 
     public List<OptionSection> getCategories() {
         updateSections();
-        return List.of(generalOptions, blockInfo2dOptions, blockInfo3dOptions, arrowOptions, hotkeys, colorMods);
+        List<Option<?>> render2dHotkeys = new ArrayList<>(BlockInfo2dRenderer.getInstance().getHotkeyConfigs());
+        List<Option<?>> render3dHotkeys = new ArrayList<>(BlockInfo3dRenderer.getInstance().getHotkeyConfigs());
+        OptionSection hotkeys = new OptionSection("hotkeys", "betterblockoutline.config.tab.hotkeys", "betterblockoutline.config.tab.info.hotkeys", List.of(
+                new OptionSection("general", "betterblockoutline.config.tab.hotkeys.general", "betterblockoutline.config.tab.hotkeys.info.general",
+                        Hotkeys.getInstance().getOptions()
+                ),
+                new OptionSection("blockinfo2d", "betterblockoutline.config.tab.hotkeys.blockinfo2d", "betterblockoutline.config.tab.hotkeys.info.blockinfo2d",
+                        render2dHotkeys
+                ),
+                new OptionSection("blockinfo3d", "betterblockoutline.config.tab.hotkeys.blockinfo3d", "betterblockoutline.config.tab.hotkeys.info.blockinfo3d",
+                        render3dHotkeys
+                )
+        ));
+        OptionSection blockInfo = new OptionSection("blockinfo", "betterblockoutline.config.tab.blockinfo", "betterblockoutline.config.tab.info.blockinfo", List.of(
+                blockInfo2dOptions,
+                new OptionSection("blockinfo3d", "betterblockoutline.config.tab.blockinfo.blockinfo3d", "betterblockoutline.config.tab.blockinfo.info.blockinfo3d", List.of(
+                        new OptionSection("general", "betterblockoutline.config.tab.blockinfo.blockinfo3d.general", "betterblockoutline.config.tab.blockinfo.blockinfo3d.info.general", blockInfo3dOptions.getOptions()),
+                        arrowOptions
+                ))
+        ));
+        return List.of(generalOptions, colorMods, blockInfo, hotkeys);
     }
 
     public void updateSections() {
@@ -233,46 +264,63 @@ public class ConfigStorage extends ModConfig {
                 hotkeyOptions
         );
         arrowOptions = new OptionSection(
-                BlockInfoDirectionArrow.NAME, "betterblockoutline.option.section.arrowtype", "betterblockoutline.option.section.info.arrowtype",
+                BlockInfoDirectionArrow.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo3d.directionarrow", "betterblockoutline.config.tab.blockinfo.blockinfo3d.info.directionarrow",
                 getBlockInfoArrow().getOptions()
         );
-        List<Option<?>> options3d = new ArrayList<>(getBlockInfo2d().getOptions());
+        List<Option<?>> options3d = new ArrayList<>(getBlockInfo3d().getOptions());
         options3d.addAll(BlockInfo3dRenderer.getInstance().getActiveConfigs());
         blockInfo3dOptions = new OptionSection(
-                BlockInfo3d.NAME, "betterblockoutline.option.section.blockinfo3d", "betterblockoutline.option.section.info.blockinfo3d",
+                BlockInfo3d.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo3d", "betterblockoutline.config.tab.blockinfo.info.blockinfo3d",
                 options3d
         );
         List<Option<?>> options2d = new ArrayList<>(getBlockInfo2d().getOptions());
         options2d.addAll(BlockInfo2dRenderer.getInstance().getActiveConfigs());
         blockInfo2dOptions = new OptionSection(
-                BlockInfo2d.NAME, "betterblockoutline.option.section.blockinfo2d", "betterblockoutline.option.section.info.blockinfo2d",
+                BlockInfo2d.NAME, "betterblockoutline.config.tab.blockinfo.blockinfo2d", "betterblockoutline.config.tab.blockinfo.info.blockinfo2d",
                 options2d
         );
         generalOptions = new OptionSection(
-                General.NAME, "betterblockoutline.option.section.general", "betterblockoutline.option.section.info.general",
+                General.NAME, "betterblockoutline.config.tab.general", "betterblockoutline.config.tab.info.general",
                 getGeneral().getOptions()
         );
 
-        List<Option<?>> modOptions = new ArrayList<>(getColorMods("outline"));
-
-
+        List<Option<?>> modOptions = new ArrayList<>();
         for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
             List<Option<?>> fillModsOptions = new ArrayList<>(entry.getValue());
+            fillModsOptions.add(0, new ColorModifierConfig(ColorModifierContext.FILL.fromString(entry.getKey())));
             modOptions.add(new OptionSection(
-                    entry.getKey(), "betterblockoutline.option.section." + entry.getKey(), "betterblockoutline.option.section.info." + entry.getKey(),
+                    entry.getKey(), "betterblockoutline.config.tab." + entry.getKey(), "betterblockoutline.config.tab.info." + entry.getKey(),
                     fillModsOptions
             ));
         }
 
         colorMods = new OptionSection(
-                "color_modifiers", "betterblockoutline.option.section.color_mods", "betterblockoutline.option.section.info.color_mods",
+                "color_modifiers", "betterblockoutline.config.tab.color_mods", "betterblockoutline.config.tab.info.color_mods",
                 modOptions
         );
     }
 
     @Override
-    public void addOption(Option<?> option) {
+    public void save() {
+        super.save();
+        config.load();
+        // Custom save logic for color mods
+        ConfigObject modsConfig = config.getConfig().createNew();
+        for (Map.Entry<String, List<ConfigColorModifier<?>>> entry : colorModifications.entrySet()) {
+            List<ConfigObject> nest = new ArrayList<>();
+            for (ConfigColorModifier<?> mod : entry.getValue()) {
+                ConfigObject obj = modsConfig.createNew();
+                mod.save(obj);
+                obj.set("type", mod.getType().getSaveKey());
+                nest.add(obj);
+            }
 
+            modsConfig.set(entry.getKey(), nest);
+        }
+
+        config.getConfig().set("color_modifiers", modsConfig);
+        config.save();
+        config.close();
     }
 
     @Override
@@ -312,6 +360,6 @@ public class ConfigStorage extends ModConfig {
 
     @Override
     public Screen getScreen() {
-        return ConfigScreen.of(getCategories());
+        return ConfigScreen.ofSections(getCategories());
     }
 }
