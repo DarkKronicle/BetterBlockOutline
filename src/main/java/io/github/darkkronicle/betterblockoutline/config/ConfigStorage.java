@@ -332,6 +332,9 @@ public class ConfigStorage extends ModConfig {
             return;
         }
         colorModifications.clear();
+        for (ColorModifierType type : ColorModifierType.values()) {
+            colorModifications.put(type.getSaveKey(), new ArrayList<>());
+        }
         for (Map.Entry<String, Object> mod : mods.get().getValues().entrySet()) {
             List<ConfigObject> m = (List<ConfigObject>) mod.getValue();
             for (ConfigObject o : m) {
