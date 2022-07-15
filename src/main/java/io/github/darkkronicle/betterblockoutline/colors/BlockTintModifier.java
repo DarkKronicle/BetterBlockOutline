@@ -35,6 +35,9 @@ public class BlockTintModifier implements IColorModifier {
 
     @Override
     public Color getColor(BlockPosState block, Color original, long ms) {
+        if (pattern == null) {
+            return original;
+        }
         String name = Registry.BLOCK.getId(block.getState().getBlock()).toString();
         if (!lastString.equals(blockNameRegex.getValue())) {
             compilePattern();

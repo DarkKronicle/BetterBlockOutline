@@ -332,7 +332,7 @@ public class ConfigStorage extends ModConfig {
             return;
         }
         colorModifications.clear();
-        for (ColorModifierType type : ColorModifierType.values()) {
+        for (ColorModifierContext type : ColorModifierContext.values()) {
             colorModifications.put(type.getSaveKey(), new ArrayList<>());
         }
         for (Map.Entry<String, Object> mod : mods.get().getValues().entrySet()) {
