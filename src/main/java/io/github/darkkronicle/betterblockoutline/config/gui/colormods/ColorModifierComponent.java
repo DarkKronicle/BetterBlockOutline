@@ -27,7 +27,7 @@ public class ColorModifierComponent<T extends IColorModifier> extends OptionComp
 
     @Override
     public Text getConfigTypeInfo() {
-        return new FluidText("§7§o" + ("betterblockoutline.optiontype.info.color_modifier"));
+        return new FluidText("§7§o" + StringUtil.translate("betterblockoutline.optiontype.info.color_modifier"));
     }
 
     @Override
