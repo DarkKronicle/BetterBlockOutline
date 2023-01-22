@@ -2,16 +2,15 @@ package io.github.darkkronicle.betterblockoutline.renderers;
 
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.NormalConnectedBlock;
-import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.betterblockoutline.interfaces.IRenderable;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,7 @@ public class PersistentOutlineRenderer implements IRenderable {
         if (result == null || result.getType() != HitResult.Type.BLOCK) {
             return false;
         }
-        removeIfExistsElseAdd(((BlockHitResult)result).getBlockPos());
+        removeIfExistsElseAdd(((BlockHitResult) result).getBlockPos());
         return true;
     }
 }

@@ -1,15 +1,14 @@
 package io.github.darkkronicle.betterblockoutline.blockinfo.info2d;
 
+import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
-import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
-import io.github.darkkronicle.betterblockoutline.util.ColorUtil;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.darkkore.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.state.property.Property;
+import org.joml.Vector3d;
 
 import java.util.Arrays;
 import java.util.List;

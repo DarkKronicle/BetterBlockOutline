@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
-import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import io.github.darkkronicle.betterblockoutline.util.VectorPair;
 import io.github.darkkronicle.darkkore.config.options.OptionListEntry;
 import lombok.AllArgsConstructor;
@@ -14,18 +13,15 @@ import net.minecraft.block.AbstractRedstoneGateBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ObserverBlock;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaterniondc;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -39,97 +35,96 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     public enum ArrowType implements OptionListEntry<ArrowType> {
         LINE_ARROW("line", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
-            lines.add(new VectorPair(new Vector3f(0, -.5f, 0), new Vector3f(0, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(-.1f, .2f, 0)));
-            lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(0, .2f, -.1f)));
-            lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(.1f, .2f, 0)));
-            lines.add(new VectorPair(new Vector3f(0, .5f, 0), new Vector3f(0, .2f, .1f)));
-            lines.add(new VectorPair(new Vector3f(-.1f, .2f, 0), new Vector3f(0, .2f, -.1f)));
-            lines.add(new VectorPair(new Vector3f(0, .2f, -.1f), new Vector3f(.1f, .2f, 0)));
-            lines.add(new VectorPair(new Vector3f(.1f, .2f, 0f), new Vector3f(0, .2f, .1f)));
-            lines.add(new VectorPair(new Vector3f(0, .2f, .1f), new Vector3f(-.1f, .2f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, -.5f, 0), new Vector3d(0, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, .5f, 0), new Vector3d(-.1f, .2f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, .5f, 0), new Vector3d(0, .2f, -.1f)));
+            lines.add(new VectorPair(new Vector3d(0, .5f, 0), new Vector3d(.1f, .2f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, .5f, 0), new Vector3d(0, .2f, .1f)));
+            lines.add(new VectorPair(new Vector3d(-.1f, .2f, 0), new Vector3d(0, .2f, -.1f)));
+            lines.add(new VectorPair(new Vector3d(0, .2f, -.1f), new Vector3d(.1f, .2f, 0)));
+            lines.add(new VectorPair(new Vector3d(.1f, .2f, 0f), new Vector3d(0, .2f, .1f)));
+            lines.add(new VectorPair(new Vector3d(0, .2f, .1f), new Vector3d(-.1f, .2f, 0)));
             return lines;
         })),
         PYRAMID("pyramid", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             // Points inwards
-            lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0f), new Vector3f(0, .4f, 0)));
-            lines.add(new VectorPair(new Vector3f(.3f, -.4f, 0f), new Vector3f(0, .4f, 0)));
-            lines.add(new VectorPair(new Vector3f(0, -.4f, -.3f), new Vector3f(0, .4f, 0)));
-            lines.add(new VectorPair(new Vector3f(0, -.4f, .3f), new Vector3f(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.3f, -.4f, 0f), new Vector3d(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(.3f, -.4f, 0f), new Vector3d(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, -.4f, -.3f), new Vector3d(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(0, -.4f, .3f), new Vector3d(0, .4f, 0)));
             // Connections
-            lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0), new Vector3f(0, -.4f, -.3f)));
-            lines.add(new VectorPair(new Vector3f(0, -.4f, -.3f), new Vector3f(.3f, -.4f, 0)));
-            lines.add(new VectorPair(new Vector3f(.3f, -.4f, 0), new Vector3f(0, -.4f, .3f)));
-            lines.add(new VectorPair(new Vector3f(0, -.4f, .3f), new Vector3f(-.3f, -.4f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.3f, -.4f, 0), new Vector3d(0, -.4f, -.3f)));
+            lines.add(new VectorPair(new Vector3d(0, -.4f, -.3f), new Vector3d(.3f, -.4f, 0)));
+            lines.add(new VectorPair(new Vector3d(.3f, -.4f, 0), new Vector3d(0, -.4f, .3f)));
+            lines.add(new VectorPair(new Vector3d(0, -.4f, .3f), new Vector3d(-.3f, -.4f, 0)));
             return lines;
         })),
         CHEVRON("chevron", false, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
-            lines.add(new VectorPair(new Vector3f(-.3f, -.4f, 0), new Vector3f(0, .4f, 0)));
-            lines.add(new VectorPair(new Vector3f(.3f, -.4f, 0), new Vector3f(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.3f, -.4f, 0), new Vector3d(0, .4f, 0)));
+            lines.add(new VectorPair(new Vector3d(.3f, -.4f, 0), new Vector3d(0, .4f, 0)));
             return lines;
         })),
         ALL_SIDES("sides", true, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
             // -X side
-            lines.add(new VectorPair(new Vector3f(-.508f, -.5f, 0), new Vector3f(-.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(-.508f, .3f, -.3f), new Vector3f(-.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(-.508f, .3f, .3f), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, -.5f, 0), new Vector3d(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, .3f, -.3f), new Vector3d(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, .3f, .3f), new Vector3d(-.508f, .5f, 0)));
 
             // +X side
-            lines.add(new VectorPair(new Vector3f(.508f, -.5f, 0), new Vector3f(.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(.508f, .3f, -.3f), new Vector3f(.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(.508f, .3f, .3f), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, -.5f, 0), new Vector3d(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, .3f, -.3f), new Vector3d(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, .3f, .3f), new Vector3d(.508f, .5f, 0)));
 
             // -Z side
-            lines.add(new VectorPair(new Vector3f(0f, -.5f, -.508f), new Vector3f(0, .5f, -.508f)));
-            lines.add(new VectorPair(new Vector3f(-.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
-            lines.add(new VectorPair(new Vector3f(.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(0f, -.5f, -.508f), new Vector3d(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, .3f, -.508f), new Vector3d(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(.3f, .3f, -.508f), new Vector3d(0, .5f, -.508f)));
 
             // +Z side
-            lines.add(new VectorPair(new Vector3f(0f, -.5f, .508f), new Vector3f(0, .5f, .508f)));
-            lines.add(new VectorPair(new Vector3f(-.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
-            lines.add(new VectorPair(new Vector3f(.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(0f, -.5f, .508f), new Vector3d(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, .3f, .508f), new Vector3d(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(.3f, .3f, .508f), new Vector3d(0, .5f, .508f)));
 
             // +Y side
-            lines.add(new VectorPair(new Vector3f(-.1f, .508f, -.1f), new Vector3f(-.1f, .508f, .1f)));
-            lines.add(new VectorPair(new Vector3f(-.1f, .508f, .1f), new Vector3f(.1f, .508f, .1f)));
-            lines.add(new VectorPair(new Vector3f(.1f, .508f, .1f), new Vector3f(.1f, .508f, -.1f)));
-            lines.add(new VectorPair(new Vector3f(.1f, .508f, -.1f), new Vector3f(-.1f, .508f, -.1f)));
+            lines.add(new VectorPair(new Vector3d(-.1f, .508f, -.1f), new Vector3d(-.1f, .508f, .1f)));
+            lines.add(new VectorPair(new Vector3d(-.1f, .508f, .1f), new Vector3d(.1f, .508f, .1f)));
+            lines.add(new VectorPair(new Vector3d(.1f, .508f, .1f), new Vector3d(.1f, .508f, -.1f)));
+            lines.add(new VectorPair(new Vector3d(.1f, .508f, -.1f), new Vector3d(-.1f, .508f, -.1f)));
 
             // -Y side
-            lines.add(new VectorPair(new Vector3f(-.3f, -.508f, -.3f), new Vector3f(-.3f, -.508f, .3f)));
-            lines.add(new VectorPair(new Vector3f(-.3f, -.508f, .3f), new Vector3f(.3f, -.508f, .3f)));
-            lines.add(new VectorPair(new Vector3f(.3f, -.508f, .3f), new Vector3f(.3f, -.508f, -.3f)));
-            lines.add(new VectorPair(new Vector3f(.3f, -.508f, -.3f), new Vector3f(-.3f, -.508f, -.3f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, -.508f, -.3f), new Vector3d(-.3f, -.508f, .3f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, -.508f, .3f), new Vector3d(.3f, -.508f, .3f)));
+            lines.add(new VectorPair(new Vector3d(.3f, -.508f, .3f), new Vector3d(.3f, -.508f, -.3f)));
+            lines.add(new VectorPair(new Vector3d(.3f, -.508f, -.3f), new Vector3d(-.3f, -.508f, -.3f)));
             return lines;
         })),
         SIDE_ARROWS("side_arrows", true, Util.make(() -> {
             List<VectorPair> lines = new ArrayList<>();
 
             // -X side
-            lines.add(new VectorPair(new Vector3f(-.508f, -.5f, 0), new Vector3f(-.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(-.508f, .3f, -.3f), new Vector3f(-.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(-.508f, .3f, .3f), new Vector3f(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, -.5f, 0), new Vector3d(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, .3f, -.3f), new Vector3d(-.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(-.508f, .3f, .3f), new Vector3d(-.508f, .5f, 0)));
 
             // +X side
-            lines.add(new VectorPair(new Vector3f(.508f, -.5f, 0), new Vector3f(.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(.508f, .3f, -.3f), new Vector3f(.508f, .5f, 0)));
-            lines.add(new VectorPair(new Vector3f(.508f, .3f, .3f), new Vector3f(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, -.5f, 0), new Vector3d(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, .3f, -.3f), new Vector3d(.508f, .5f, 0)));
+            lines.add(new VectorPair(new Vector3d(.508f, .3f, .3f), new Vector3d(.508f, .5f, 0)));
 
             // -Z side
-            lines.add(new VectorPair(new Vector3f(0f, -.5f, -.508f), new Vector3f(0, .5f, -.508f)));
-            lines.add(new VectorPair(new Vector3f(-.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
-            lines.add(new VectorPair(new Vector3f(.3f, .3f, -.508f), new Vector3f(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(0f, -.5f, -.508f), new Vector3d(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, .3f, -.508f), new Vector3d(0, .5f, -.508f)));
+            lines.add(new VectorPair(new Vector3d(.3f, .3f, -.508f), new Vector3d(0, .5f, -.508f)));
 
             // +Z side
-            lines.add(new VectorPair(new Vector3f(0f, -.5f, .508f), new Vector3f(0, .5f, .508f)));
-            lines.add(new VectorPair(new Vector3f(-.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
-            lines.add(new VectorPair(new Vector3f(.3f, .3f, .508f), new Vector3f(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(0f, -.5f, .508f), new Vector3d(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(-.3f, .3f, .508f), new Vector3d(0, .5f, .508f)));
+            lines.add(new VectorPair(new Vector3d(.3f, .3f, .508f), new Vector3d(0, .5f, .508f)));
             return lines;
-        }))
-        ;
+        }));
 
         private final String configValue;
         @Getter
@@ -200,7 +195,7 @@ public class DirectionArrow extends AbstractBlockInfo3d {
 
         List<VectorPair> lines = getArrow();
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
         RenderSystem.lineWidth((float) ConfigStorage.getBlockInfo3d().getLineWidth().getValue().doubleValue());
         RenderingUtil.setDepth(arrow.isUseDepthTest());
         RenderSystem.disableCull();
@@ -231,15 +226,15 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     }
 
     private static VectorPair rotate(Direction direction, VectorPair pair) {
-        Quaternion quaternion = direction.getRotationQuaternion();
-        return new VectorPair(pair.getVectorOne().rotate(quaternion), pair.getVectorTwo().rotate(quaternion));
+        Quaternionf quaternion = direction.getRotationQuaternion();
+        return new VectorPair(pair.getVectorOne().rotate((Quaterniondc) quaternion), pair.getVectorTwo().rotate((Quaterniondc) quaternion));
     }
 
     private static VectorPair offset(VectorPair pair) {
-        Vector3f one = pair.getVectorOne();
-        Vector3f two = pair.getVectorTwo();
-        Vector3f oneNew = new Vector3f(.5f + one.x, .5f + one.y, .5f + one.z);
-        Vector3f twoNew = new Vector3f(.5f + two.x, .5f + two.y, .5f + two.z);
+        Vector3d one = pair.getVectorOne();
+        Vector3d two = pair.getVectorTwo();
+        Vector3d oneNew = new Vector3d(.5f + one.x, .5f + one.y, .5f + one.z);
+        Vector3d twoNew = new Vector3d(.5f + two.x, .5f + two.y, .5f + two.z);
         return new VectorPair(oneNew, twoNew);
     }
 

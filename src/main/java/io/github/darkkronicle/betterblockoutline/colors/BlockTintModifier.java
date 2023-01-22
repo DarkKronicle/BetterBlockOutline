@@ -7,7 +7,7 @@ import io.github.darkkronicle.darkkore.config.options.DoubleOption;
 import io.github.darkkronicle.darkkore.config.options.Option;
 import io.github.darkkronicle.darkkore.config.options.StringOption;
 import io.github.darkkronicle.darkkore.util.Color;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BlockTintModifier implements IColorModifier {
         if (pattern == null) {
             return original;
         }
-        String name = Registry.BLOCK.getId(block.getState().getBlock()).toString();
+        String name = Registries.BLOCK.getId(block.getState().getBlock()).toString();
         if (!lastString.equals(blockNameRegex.getValue())) {
             compilePattern();
         }

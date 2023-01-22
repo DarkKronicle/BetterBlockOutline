@@ -4,8 +4,8 @@ import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
+import org.joml.Vector3d;
 
 public abstract class AbstractBlockInfo3d extends AbstractBlockInfo implements IOverlayRenderer {
 
