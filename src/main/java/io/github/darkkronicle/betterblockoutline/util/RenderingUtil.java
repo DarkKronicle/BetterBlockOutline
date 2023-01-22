@@ -4,15 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.darkkronicle.darkkore.util.Color;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
 
 @UtilityClass
 public class RenderingUtil {
@@ -78,8 +74,9 @@ public class RenderingUtil {
 
     /**
      * Gets the camera offset from a position
+     *
      * @param camera Camera position
-     * @param pos Position to get difference
+     * @param pos    Position to get difference
      * @return Difference
      */
     public Vector3d getCameraOffset(Vector3d camera, BlockPos pos) {
@@ -91,60 +88,63 @@ public class RenderingUtil {
 
     /**
      * Gets the normal line from a starting and ending point.
+     *
      * @param start Starting point
-     * @param end Ending point
+     * @param end   Ending point
      * @return Normal line
      */
-    public Vector3f getNormalAngle(Vector3f start, Vector3f end) {
-        float xLength = end.x - start.x;
-        float yLength = end.y - start.y;
-        float zLength = end.z - start.z;
+    public Vector3d getNormalAngle(Vector3d start, Vector3d end) {
+        double xLength = end.x - start.x;
+        double yLength = end.y - start.y;
+        double zLength = end.z - start.z;
         float distance = (float) Math.sqrt(xLength * xLength + yLength * yLength + zLength * zLength);
         xLength /= distance;
         yLength /= distance;
         zLength /= distance;
-        return new Vector3f(xLength, yLength, zLength);
+        return new Vector3d(xLength, yLength, zLength);
     }
 
     /**
      * Draw's a line and adds the camera position difference to the render.
-     *
+     * <p>
      * Rendering system should already be setup
-     * @param entry Matrix entry
+     *
+     * @param entry  Matrix entry
      * @param buffer Buffer builder that is already setup
      * @param camDif The position of render minus camera
-     * @param start Starting point
-     * @param end Ending point
-     * @param color Color to render
+     * @param start  Starting point
+     * @param end    Ending point
+     * @param color  Color to render
      */
-    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Vector3f start, Vector3f end, Color color) {
-        Vector3f startRaw = new Vector3f(start.x + camDif.x, start.y + camDif.y, start.z + camDif.z);
-        Vector3f endRaw = new Vector3f(end.x + camDif.x, end.y + camDif.y, end.z + camDif.z);
+    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Vector3d start, Vector3d end, Color color) {
+        Vector3d startRaw = start.add(camDif);
+        Vector3d endRaw = end.add(camDif);
         drawLine(entry, buffer, startRaw, endRaw, color);
     }
 
     /**
      * This method doesn't do any of the {@link RenderSystem} setting up. Should be setup before call.
-     * @param entry Matrix entry
+     *
+     * @param entry  Matrix entry
      * @param buffer Buffer builder that is already setup
-     * @param start Starting point
-     * @param end Ending point
-     * @param color Color to render
+     * @param start  Starting point
+     * @param end    Ending point
+     * @param color  Color to render
      */
-    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3f start, Vector3f end, Color color) {
-        Vector3f normal = RenderingUtil.getNormalAngle(start, end);
+    public void drawLine(MatrixStack.Entry entry, BufferBuilder buffer, Vector3d start, Vector3d end, Color color) {
+        Vector3d normal = RenderingUtil.getNormalAngle(start, end);
         float r = color.red() / 255f;
         float g = color.green() / 255f;
         float b = color.blue() / 255f;
         float a = color.alpha() / 255f;
 
         buffer.vertex(
-                entry.getPositionMatrix(), start.x, start.y, start.z
-        ).color(r, g, b, a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
+                entry.getPositionMatrix(), (float) start.x, (float) start.y, (float) start.z
+        ).color(r, g, b, a).normal(entry.getNormalMatrix(), (float) normal.x, (float) normal.y, (float) normal.z).next();
 
         buffer.vertex(
-                entry.getPositionMatrix(), end.x, end.y, end.z
-        ).color(r, g, b, a).normal(entry.getNormalMatrix(), normal.x, normal.y, normal.z).next();
+                entry.getPositionMatrix(), (float) end.x, (float) end.y, (float) end.z
+        ).color(r, g, b, a).normal(entry.getNormalMatrix(), (float) normal.x, (float) normal.y, (float) normal.z).next();
     }
 
     public void drawString(MatrixStack matrices, TextRenderer renderer, String string, Camera camera, Vector3d position) {

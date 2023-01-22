@@ -7,7 +7,6 @@
   "authors": [
     "DarkKronicle"
   ],
-  "contact": {},
   "license": "MPL-2.0",
   "icon": "assets/betterblockoutline/icon.png",
   "environment": "client",
@@ -23,7 +22,7 @@
     "betterblockoutline.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.12",
-    "minecraft": ">=1.19"
+    "fabricloader": ">=0.14.11",
+    "minecraft": ">=1.19.3"
   }
 }

@@ -2,6 +2,8 @@ package io.github.darkkronicle.betterblockoutline.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 /**
  * A class containing two {@link Vector3f}
@@ -12,9 +14,9 @@ import lombok.Getter;
 public class VectorPair {
 
     @Getter
-    private final Vector3f vectorOne;
+    private final Vector3d vectorOne;
     @Getter
-    private final Vector3f vectorTwo;
+    private final Vector3d vectorTwo;
 
     @Override
     public boolean equals(Object obj) {

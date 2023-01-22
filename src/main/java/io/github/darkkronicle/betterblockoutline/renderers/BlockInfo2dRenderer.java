@@ -1,25 +1,24 @@
 package io.github.darkkronicle.betterblockoutline.renderers;
 
-import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
-import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
+import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.NoteblockInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.RedstoneInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.SignText;
-import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d;
+import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
+import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.darkkore.config.options.BooleanOption;
-import io.github.darkkronicle.darkkore.config.options.Option;
 import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
 import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
 import lombok.Getter;
 import net.minecraft.block.InfestedBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.Collections;

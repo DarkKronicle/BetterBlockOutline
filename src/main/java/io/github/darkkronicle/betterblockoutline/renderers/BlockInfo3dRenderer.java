@@ -12,8 +12,8 @@ import io.github.darkkronicle.darkkore.hotkeys.HotkeySettings;
 import io.github.darkkronicle.darkkore.hotkeys.HotkeySettingsOption;
 import lombok.Getter;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.Collections;

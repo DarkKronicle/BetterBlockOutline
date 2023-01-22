@@ -16,11 +16,11 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.SilverfishEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.SilverfishEntity;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3d;
 
 public class InfestedSilverfish extends AbstractBlockInfo3d {
 
@@ -72,7 +72,7 @@ public class InfestedSilverfish extends AbstractBlockInfo3d {
         renderLayer.startDrawing();
         // We set depth here to bypass other render layers
         RenderingUtil.setDepth(false);
-        BufferRenderer.drawWithShader(buffer.end());
+        BufferRenderer.drawWithGlobalProgram(buffer.end());
         renderLayer.endDrawing();
 
         RenderingUtil.setDepth(true);

@@ -10,26 +10,22 @@ import io.github.darkkronicle.betterblockoutline.config.OutlineType;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
 import io.github.darkkronicle.betterblockoutline.util.BlockPosState;
+import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
 import io.github.darkkronicle.darkkore.util.Color;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
-import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
-import io.github.darkkronicle.betterblockoutline.util.Vector3f;
 import net.minecraft.util.shape.VoxelShapes;
+import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 public class BasicOutlineRenderer implements IOverlayRenderer {
 
-    public BasicOutlineRenderer() {}
+    public BasicOutlineRenderer() {
+    }
 
     @Override
     public boolean render(MatrixStack matrices, Vector3d camera, Entity entity, AbstractConnectedBlock block) {
@@ -62,7 +58,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
         BufferBuilder buffer = tessellator.getBuffer();
 
         // Setup rendering
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         RenderingUtil.setDepth(!ConfigStorage.getGeneral().getSeeThrough().getValue()); // See through
@@ -108,12 +104,12 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     }
 
     /**
-     *  Renders an outline and checks for {@link OutlineType}. Will be handled correctly. Sets shader and smooth lines.
-     *  Before calling blend and depth should be set
+     * Renders an outline and checks for {@link OutlineType}. Will be handled correctly. Sets shader and smooth lines.
+     * Before calling blend and depth should be set
      */
     private void drawOutlineLines(Tessellator tessellator, MatrixStack matrices, BufferBuilder buffer, Vector3d camDif, Color color, VoxelShape outline) {
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader);
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram);
         RenderSystem.lineWidth((float) ConfigStorage.getGeneral().getOutlineWidth().getValue().doubleValue());
 
         OutlineType type = ConfigStorage.getGeneral().getOutlineType().getValue();
@@ -132,7 +128,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
     }
 
     /**
-     *  Draws an outline. Setup should be done before this method is called.
+     * Draws an outline. Setup should be done before this method is called.
      */
     private void drawOutlineLine(Tessellator tessellator, MatrixStack.Entry entry, BufferBuilder buffer, Vector3d camDif, Color color, VoxelShape outline) {
         outline.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
@@ -143,7 +139,7 @@ public class BasicOutlineRenderer implements IOverlayRenderer {
             maxX += .001;
             maxY += .001;
             maxZ += .001;
-            RenderingUtil.drawLine(entry, buffer, camDif, new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ), color);
+            RenderingUtil.drawLine(entry, buffer, camDif, new Vector3d(minX, minY, minZ), new Vector3d(maxX, maxY, maxZ), color);
         });
         tessellator.draw();
     }

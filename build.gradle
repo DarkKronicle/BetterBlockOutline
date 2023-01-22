@@ -16,17 +16,26 @@ if (file("extra.properties").exists()) {
 }
 
 repositories {
-    mavenCentral()
     maven { url 'https://jitpack.io' }
+    maven { url "https://maven.terraformersmc.com/releases" }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+        content {
+            includeGroup 'io.github.ladysnake'
+            includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+        }
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "com.github.DarkKronicle:DarkKore:main-SNAPSHOT"
 
-    modCompileOnly "io.github.prospector:modmenu:${project.modmenu_version}"
+    modImplementation "com.github.darkkronicle:DarkKore:${project.darkkore_version}"
+
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 processResources {
@@ -97,13 +106,13 @@ task discord {
         connection.setRequestMethod("POST")
         connection.setDoOutput(true)
         connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary)
-        DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
+        DataOutputStream stream = new DataOutputStream(connection.getOutputStream())
 
         stream.writeBytes("--" + boundary + "\r\n")
         stream.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"\r\n\r\n")
         stream.write(Files.readAllBytes(file.toPath()))
         stream.writeBytes("\r\n")
-        stream.writeBytes("--" + boundary + "\r\n");
+        stream.writeBytes("--" + boundary + "\r\n")
         stream.writeBytes('Content-Disposition: form-data; name="content"\r\n\r\n' + text + '\r\n')
         stream.writeBytes("--" + boundary + "--\r\n")
 
