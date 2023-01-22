@@ -19,8 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
-import org.joml.Quaterniondc;
-import org.joml.Quaternionf;
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import org.lwjgl.opengl.GL11;
 
@@ -226,8 +225,8 @@ public class DirectionArrow extends AbstractBlockInfo3d {
     }
 
     private static VectorPair rotate(Direction direction, VectorPair pair) {
-        Quaternionf quaternion = direction.getRotationQuaternion();
-        return new VectorPair(pair.getVectorOne().rotate((Quaterniondc) quaternion), pair.getVectorTwo().rotate((Quaterniondc) quaternion));
+        Quaterniond quaternion = new Quaterniond(direction.getRotationQuaternion());
+        return new VectorPair(new Vector3d(pair.getVectorOne()).rotate(quaternion), new Vector3d(pair.getVectorTwo()).rotate(quaternion));
     }
 
     private static VectorPair offset(VectorPair pair) {
