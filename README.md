@@ -12,7 +12,7 @@ BetterBlockOutline is a client sided Minecraft mod that allows for ample customi
 
 There are different color effects you can apply to the fill color or the outline color. Chroma, blink, and more coming!
 
-[MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib) is required run and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for configuration.
+[DarkKore](https://www.curseforge.com/minecraft/mc-mods/darkkore) is required run and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for configuration.
 
 Join the [Discord](https://discord.gg/WnaE3uZxDA) for help.
 
