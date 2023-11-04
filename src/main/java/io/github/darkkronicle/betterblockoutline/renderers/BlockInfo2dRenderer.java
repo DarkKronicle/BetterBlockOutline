@@ -4,7 +4,7 @@ import io.github.darkkronicle.betterblockoutline.blockinfo.AbstractBlockInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.AbstractBlockInfo2d;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.NoteblockInfo;
 import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.RedstoneInfo;
-import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.SignText;
+import io.github.darkkronicle.betterblockoutline.blockinfo.info2d.SignTextInfo;
 import io.github.darkkronicle.betterblockoutline.config.ConfigStorage;
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.interfaces.IOverlayRenderer;
@@ -50,7 +50,7 @@ public class BlockInfo2dRenderer implements IOverlayRenderer {
         // Dedicated classes
         add(new RedstoneInfo());
         add(new NoteblockInfo());
-        add(new SignText());
+        add(new SignTextInfo());
 
         // Simple ones
         add(constructSimple(AbstractBlockInfo.Order.ALL, "coordinatestext", (block) -> true, (block) -> {

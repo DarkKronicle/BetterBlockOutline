@@ -179,7 +179,7 @@ public class RenderingUtil {
         matrices.translate(0, -yOffset, 0);
         for (String line : lines) {
             float xOffset = -1 * (textRenderer.getWidth(line) / 2.0f);
-            textRenderer.draw(line, xOffset, 0.0f, textColor.color(), false, matrix4f, immediate, !depth, backgroundColor.color(), LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(line, xOffset, 0.0f, textColor.color(), false, matrix4f, immediate, depth ? TextRenderer.TextLayerType.NORMAL : TextRenderer.TextLayerType.SEE_THROUGH, backgroundColor.color(), LightmapTextureManager.MAX_LIGHT_COORDINATE);
             matrices.translate(0, lineHeight, 0);
         }
         immediate.draw();

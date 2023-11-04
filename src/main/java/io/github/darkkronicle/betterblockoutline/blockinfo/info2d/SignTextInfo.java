@@ -4,6 +4,7 @@ import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnect
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
@@ -12,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SignText extends AbstractBlockInfo2d {
+public class SignTextInfo extends AbstractBlockInfo2d {
     private final MinecraftClient client = MinecraftClient.getInstance();
 
-    public SignText() {
-        super(Order.SPECIFIC, "signtext", "betterblockoutline.blockinfo2d.signtext", "betterblockoutline.blockinfo2d.info.signtext");
+    public SignTextInfo() {
+        super(Order.SPECIFIC, "signtextinfo", "betterblockoutline.blockinfo2d.signtextinfo", "betterblockoutline.blockinfo2d.info.signtextinfo");
     }
 
     @Override
@@ -30,9 +31,15 @@ public class SignText extends AbstractBlockInfo2d {
         if (!(entity instanceof SignBlockEntity sign)) {
             return Optional.empty();
         }
+        SignText signText;
+        if (sign.isPlayerFacingFront(MinecraftClient.getInstance().player)) {
+            signText = sign.getFrontText();
+        } else {
+            signText = sign.getBackText();
+        }
         List<String> lines = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            Text line = sign.getTextOnRow(i, true);
+            Text line = signText.getMessage(i, true);
             String string = line.getString();
             if (line.getContent() != LiteralTextContent.EMPTY && string.length() > 0) {
                 lines.add(string);

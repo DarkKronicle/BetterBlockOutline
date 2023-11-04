@@ -2,6 +2,7 @@ package io.github.darkkronicle.betterblockoutline.blockinfo.info3d;
 
 import io.github.darkkronicle.betterblockoutline.connectedblocks.AbstractConnectedBlock;
 import io.github.darkkronicle.betterblockoutline.util.RenderingUtil;
+import com.mojang.blaze3d.systems.VertexSorter;
 import net.minecraft.block.InfestedBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.Model;
@@ -68,7 +69,8 @@ public class InfestedSilverfish extends AbstractBlockInfo3d {
 
         renderer.render(silverFish, 0, 1f, matrices, immediate, 0xF000F0);
         RenderLayer renderLayer = RenderLayer.getEntityTranslucent(renderer.getTexture(silverFish));
-        buffer.sortFrom(0, 0, 0);
+        VertexSorter vertexSorter = VertexSorter.byDistance(0, 0, 0);
+        buffer.setSorter(vertexSorter);
         renderLayer.startDrawing();
         // We set depth here to bypass other render layers
         RenderingUtil.setDepth(false);

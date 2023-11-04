@@ -94,8 +94,8 @@
 
   "betterblockoutline.blockinfo2d.noteblockinfo": "Noteblock Info",
   "betterblockoutline.blockinfo2d.info.noteblockinfo": "Whether or not §6information about a note block§r, including the tuned note and current \ninstrument is displayed, when hovering over §6noteblocks",
-  "betterblockoutline.blockinfo2d.signtext": "Sign Text",
-  "betterblockoutline.blockinfo2d.info.signtext": "Whether or not the text of a §6selected sign§r is displayed",
+  "betterblockoutline.blockinfo2d.signtextinfo": "Sign Text",
+  "betterblockoutline.blockinfo2d.info.signtextinfo": "Whether or not the text of a §6selected sign§r is displayed",
   "betterblockoutline.blockinfo2d.infested": "Block Infestation",
   "betterblockoutline.blockinfo2d.info.infested": "Whether or not the §6infestation state§r of §6blocks that can be infested by silverfish§r is displayed",
   "betterblockoutline.blockinfo2d.redstoneinfo": "Redstone Info",

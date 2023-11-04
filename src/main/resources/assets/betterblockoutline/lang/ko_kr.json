@@ -85,8 +85,8 @@
 
   "betterblockoutline.blockinfo2d.noteblockinfo": "노트블럭 정보",
   "betterblockoutline.blockinfo2d.info.noteblockinfo": "§6노트블럭§r에 마우스를 가져갔을 때 튜닝된 노트 및 현재 악기를 포함한 \n§6노트블럭에 대한 정보§r를 표시할지 여부를 설정합니다.",
-  "betterblockoutline.blockinfo2d.signtext": "표지판 텍스트",
-  "betterblockoutline.blockinfo2d.info.signtext": "§6선택한 표지판§r의 텍스트를 표시할지 여부를 설정합니다.",
+  "betterblockoutline.blockinfo2d.signtextinfo": "표지판 텍스트",
+  "betterblockoutline.blockinfo2d.info.signtextinfo": "§6선택한 표지판§r의 텍스트를 표시할지 여부를 설정합니다.",
   "betterblockoutline.blockinfo2d.infested": "블럭 침습",
   "betterblockoutline.blockinfo2d.info.infested": "§6벌레 먹은 블록§r의 §6침습 상태§r를 표시할지 여부를 설정합니다.",
   "betterblockoutline.blockinfo2d.redstoneinfo": "레드스톤 정보",
