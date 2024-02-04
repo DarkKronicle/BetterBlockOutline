@@ -1,3 +1,5 @@
+> ## :warning: This project has been moved to: https://gitlab.com/matteo4375/BetterBlockOutline
+
 # BetterBlockOutline
 
 [![Discord Badge](https://img.shields.io/discord/753693459369427044?color=000000&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/WnaE3uZxDA)
