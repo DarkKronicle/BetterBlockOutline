@@ -1,6 +1,9 @@
+# Important
+
+I have no real interest in mod development at the moment, so I am archiving this. Feel free to fork, and consider some of the community forks/
+
 # BetterBlockOutline
 
-[![Discord Badge](https://img.shields.io/discord/753693459369427044?color=000000&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/WnaE3uZxDA)
 [![Lines Link](https://img.shields.io/tokei/lines/github.com/DarkKronicle/BetterBlockOutline?color=000000&logo=GitHub&style=for-the-badge)](https://github.com/DarkKronicle/BetterBlockOutline)
 
 [![Downloads Badge](http://cf.way2muchnoise.eu/full_betterblockoutline_%E2%80%8B_downloads(4B4B4B-000000-ffffff-000000-ffffff).svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/betterblockoutline)
